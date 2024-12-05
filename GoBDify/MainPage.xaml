@@ -8,7 +8,7 @@
             Padding="30,20"
             Spacing="25">
 
-            <Label x:Name="outputEdt" />
+            <Label x:Name="outputEdt" Text="Diese App ermöglicht es nachzuweisen, dass Dateien in einem Ordner nach dem Zeitpunkt des jeweils erzeugten 'Timestamps' nicht verändert wurden. Dazu wird der Timestamp Service der Zertifizierungsstelle 'Certum' genutzt.\n\nHinweis: Dies ist ein Prototyp. Die Kernfunktionalität ist komplett enthalten. Es fehlt aber der Feinschliff beim Benutzerinterface und ein paar nützliche Features wie Archivieren von Dokumenten über die Kamera oder die Erstellung eines Eigenbelegs in Textform." />
 
             <ProgressBar x:Name="progressBar" IsVisible="False"/>
 
