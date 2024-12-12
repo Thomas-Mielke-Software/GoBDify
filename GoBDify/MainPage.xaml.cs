@@ -60,6 +60,9 @@ public partial class MainPage : ContentPage
             progressBar.IsVisible = true;
             outputEdt.Text = "";
 
+            PermissionStatus statusread = await Permissions.RequestAsync<Permissions.StorageRead>();
+            PermissionStatus statuswrite = await Permissions.RequestAsync<Permissions.StorageWrite>();
+
             string? folderPath = Preferences.Get("DefaultFolder", null);
 
             // Ordnerdateien einlesen
