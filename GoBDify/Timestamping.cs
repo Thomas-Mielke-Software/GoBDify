@@ -9,6 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GoBDify;
 
@@ -19,7 +20,7 @@ public static class Timestamping
     private static readonly HttpClient HttpClient = new HttpClient();
     private static readonly String RequestContentType = "application/timestamp-query";
     private static readonly String ResponseContentType = "application/timestamp-reply";
-    private static readonly String TimestampAuthorityUrl = "https://freetsa.org/tsr";  // "http://time.certum.pl";  // 
+    private static readonly String TimestampAuthorityUrl = "http://time.certum.pl";  // "https://freetsa.org/tsr";  // 
 
     /// <summary>
     /// Requests a RFC3161 Timestamp from https://freetsa.org/tsr.
@@ -30,7 +31,7 @@ public static class Timestamping
     /// <param name="hashAlgorithmName">The hashing algorithm used when generating <paramref name="hash"/></param>
     /// <returns>An instance of Rfc3161TimestampToken</returns>
     /// <exception cref="Exception"></exception>
-    public static (Rfc3161TimestampToken token, byte[] rawResponse) RequestTimestampTokenForHash(byte[] hash, HashAlgorithmName hashAlgorithmName)
+    public static async Task<(Rfc3161TimestampToken token, byte[] rawResponse)> RequestTimestampTokenForHash(byte[] hash, HashAlgorithmName hashAlgorithmName)
     {
         // A random nonce
         byte[] nonce = GetNonce(20);
@@ -58,7 +59,7 @@ public static class Timestamping
         httpRequestMessage.Content = streamContent;
 
         // Send the request and wait for a response
-        using HttpResponseMessage httpResponseMessage = HttpClient.Send(httpRequestMessage);
+        using HttpResponseMessage httpResponseMessage = await HttpClient.SendAsync(httpRequestMessage);
         MediaTypeHeaderValue contentType = httpRequestMessage.Content.Headers.ContentType;
 
         if (httpResponseMessage.StatusCode != HttpStatusCode.OK)
