@@ -14,6 +14,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Http;
 using Microsoft.Maui.Storage;
 using System.Security.Cryptography.Pkcs;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace GoBDify;
 
@@ -35,7 +37,7 @@ public partial class MainPage : ContentPage
         }
         else
         {
-            folderSelectBtn.Text = $"Aktuellen Ordner '{path}' ändern";
+            folderSelectBtn.Text = $"'{path}' ändern";
             timestampBtn.IsEnabled = true;
         }
     }
@@ -91,7 +93,7 @@ public partial class MainPage : ContentPage
                 var filesWithHash = new List<FileInfo>();
                 var filesWithoutHash = new List<FileInfo>();
                 double incrementProgress = 0.5 / (double)allFiles.Length;
-                string hash = "";
+                string hash;
 
                 // existierende hashes prüfen
                 int lastSha256File = 0;
@@ -101,29 +103,44 @@ public partial class MainPage : ContentPage
                     if (file.Name.Length == 21 && file.Name.StartsWith("timestamp") && file.Name.EndsWith(".sha256") && file.Name.Substring(9, 5).All(char.IsDigit))
                     {
                         string tstFilename = file.Name + ".tst";
+                        string tstFileFullname = file.FullName + ".tst";
                         string validText = "";
-                        string timestampText = "";
-                        // TODO: validate timestamp!
-                        //try
-                        //{
-                        //    ...
-                        //    ...
-                        //    byte[] timestampResponseBytes = File.ReadAllBytes();
-                        //    int bytesConsumed;
-                        //    Rfc3161TimestampToken timestampToken =
-                        //        timestampRequest.ProcessResponse(timestampResponseBytes, out bytesConsumed);
+                        string timestampText = "UNGÜLTIGER ZEITSTEMPEL";
+                        bool isValid = false;
+                        X509Certificate2? x509cert = null;
 
-                        //    // Timestamp prüfen
-                        //    X509Certificate2 x509cert;
-                        //    bool isValid = timestampToken.VerifySignatureForHash(Convert.FromHexString(hash), HashAlgorithmName.SHA256, out x509cert);
-                        //    timestampText = timestampToken.TokenInfo.Timestamp.ToString();
-                        //}
-                        //catch 
-                        //{
-                        //    validText = $"KONNTE {tstFilename} NICHT LESEN!";
-                        //}
-                        //validText = isValid ? "OK" : "UNGÜLTIG!";
-                        OutputLine($"___ {file.Name} {timestampText} ___");
+                        // validiere existierenden .tst timestamp
+                        try
+                        {
+                            string metahash = await HashFile(file.FullName);  // hash des hashfile
+
+                            // Rfc3161TimestampRequest dummy instance erzeugen
+                            Rfc3161TimestampRequest timestampRequest =
+                                Rfc3161TimestampRequest.CreateFromHash(
+                                    Convert.FromHexString(metahash),
+                                    HashAlgorithmName.SHA256,
+                                    null,
+                                    null,  // nounce hier nicht nötig: aus dem ursprünglichen response ziehen, der hier gleich aus der Datei gelesen wird
+                                    true);
+
+                                byte[] timestampResponseBytes = File.ReadAllBytes(tstFileFullname);
+                                int bytesConsumed;
+                                Rfc3161TimestampToken timestampToken =
+                                    timestampRequest.ProcessResponse(timestampResponseBytes, out bytesConsumed);
+
+                                // Timestamp prüfen
+                                isValid = timestampToken.VerifySignatureForHash(Convert.FromHexString(metahash), HashAlgorithmName.SHA256, out x509cert);
+                                timestampText = "vom " + timestampToken.TokenInfo.Timestamp.ToString();
+                            }
+                            catch 
+                            {
+                                validText = $"KONNTE {tstFilename} NICHT LESEN!";
+                        }
+                        if (x509cert == null || x509cert.IssuerName.Name.Length == 0)
+                            validText = "UNGÜLTIGE SIGNATUR";
+                        else
+                            validText = isValid ? $"gültige Signatur von {x509cert.IssuerName.Name}" : $"UNGÜLTIGE SIGNATUR VON {x509cert.IssuerName.Name}";
+                        OutputLine($"___ {file.Name} {timestampText} {validText} ___");
                         
                         int n;
                         int.TryParse(file.Name.Substring(9, 5), out n);  // mitzählen
@@ -179,7 +196,7 @@ public partial class MainPage : ContentPage
                     filesWithoutHash.All(fi => fi.Name == $"timestamp{lastSha256File:D5}.sha256" ||      // keine neuen Dateien hinzugekommen
                                                fi.Name == $"timestamp{lastSha256File:D5}.sha256.tst")))  // außer dem letzen timestamp?
                 {
-                    OutputLine("KEINE NEUEN DATEIEN HINZUGEKOMMEN SEIT LETZTEM TIMESTAMP");
+                    OutputLine("\nKEINE NEUEN DATEIEN HINZUGEKOMMEN SEIT LETZTEM TIMESTAMP");
                     progressBar.Progress = 1;
                 }
                 else

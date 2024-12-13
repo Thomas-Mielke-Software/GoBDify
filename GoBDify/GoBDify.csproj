@@ -41,18 +41,52 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
-	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
 	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
 	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
-	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
 	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
 	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
