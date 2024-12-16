@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="20.7.1" version="22.3" PreviousModules="appx" Modules="appx" RootPath="." Language="de" Id="{9CBB600F-92C4-41AA-A71A-8DA816A36D6A}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="Application_AssetGenApplyColorConversion" Value="true"/>
+    <ROW Name="Application_AssetGenDeletePreviousAssets" Value="true"/>
+    <ROW Name="Application_AssetGenDestFolderPath" Value="Generated Assets" ValueType="1"/>
+    <ROW Name="Application_AssetGenSourceFilePath" Value="gobdify-app-icon-1024x1024.jpg" ValueType="1"/>
+    <ROW Name="Application_AssetGenVisualAssets" Value="Medium Tile, Wide Tile, Large Tile, App Icon, Splash Screen, Badge Logo"/>
+    <ROW Name="AssetGenPkgDestFolderPath" Value="Generated Assets" ValueType="1"/>
+    <ROW Name="AssetGenScalesWin10" Value="Scale 100, Scale 120, Scale 125, Scale 140, Scale 150, Scale 160, Scale 180, Scale 200, Scale 220, Scale 225, Scale 240, Scale 250, Scale 300, Scale 400, Scale 500"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.AppXCfgComponent">
+    <ROW ID="Configuration" Order="1" OutputFileName="GoBDify1.1-neutral" ManifestFile="AppxManifest.xml" TargetOs="4" AutoUpdatesFrequency="0" AutoUpdatesOptions="0" ManifestBundleFile="AppxBundleManifest.xml" AppInstallerManifestFile="MsixAppInstallerData.xml"/>
+    <ROW ID="Configuration_1" Order="2" OutputFileName="neutral" ParentBuild="Configuration" AutoUpdatesFrequency="0" AutoUpdatesOptions="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_de.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
+    <ROW TimeStampUrl="http://time.certum.pl" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" UseSha256="1" Subject="E=thomas@mielke.software, CN=Thomas Mielke, O=Thomas Mielke, L=Hamburg, C=DE" Store="User\MY"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.GenericDirectoryComponent">
+    <ROW Id="1" Name="ROOT" Flags="1"/>
+    <ROW Id="2" Name="Assets" Parent="1" Flags="0"/>
+    <ROW Id="3" Name="ar" Parent="1" Flags="0"/>
+    <ROW Id="4" Name="ca" Parent="1" Flags="0"/>
+    <ROW Id="5" Name="cs" Parent="1" Flags="0"/>
+    <ROW Id="6" Name="da" Parent="1" Flags="0"/>
+    <ROW Id="7" Name="de" Parent="1" Flags="0"/>
+    <ROW Id="8" Name="el" Parent="1" Flags="0"/>
+    <ROW Id="9" Name="es" Parent="1" Flags="0"/>
+    <ROW Id="10" Name="fi" Parent="1" Flags="0"/>
+    <ROW Id="11" Name="fr" Parent="1" Flags="0"/>
+    <ROW Id="12" Name="he" Parent="1" Flags="0"/>
+    <ROW Id="13" Name="hi" Parent="1" Flags="0"/>
+    <ROW Id="14" Name="hr" Parent="1" Flags="0"/>
+    <ROW Id="15" Name="hu" Parent="1" Flags="0"/>
+    <ROW Id="16" Name="id" Parent="1" Flags="0"/>
+    <ROW Id="17" Name="it" Parent="1" Flags="0"/>
+    <ROW Id="18" Name="ja" Parent="1" Flags="0"/>
+    <ROW Id="19" Name="ko" Parent="1" Flags="0"/>
+    <ROW Id="20" Name="ms" Parent="1" Flags="0"/>
+    <ROW Id="21" Name="nb" Parent="1" Flags="0"/>
+    <ROW Id="22" Name="nl" Parent="1" Flags="0"/>
+    <ROW Id="23" Name="pl" Parent="1" Flags="0"/>
+    <ROW Id="24" Name="Platforms" Parent="1" Flags="0"/>
+    <ROW Id="25" Name="Windows" Parent="24" Flags="0"/>
+    <ROW Id="26" Name="pt" Parent="1" Flags="0"/>
+    <ROW Id="27" Name="pt-BR" Parent="1" Flags="0"/>
+    <ROW Id="28" Name="ro" Parent="1" Flags="0"/>
+    <ROW Id="29" Name="ru" Parent="1" Flags="0"/>
+    <ROW Id="30" Name="sk" Parent="1" Flags="0"/>
+    <ROW Id="31" Name="sv" Parent="1" Flags="0"/>
+    <ROW Id="32" Name="th" Parent="1" Flags="0"/>
+    <ROW Id="33" Name="tr" Parent="1" Flags="0"/>
+    <ROW Id="34" Name="uk" Parent="1" Flags="0"/>
+    <ROW Id="35" Name="vi" Parent="1" Flags="0"/>
+    <ROW Id="36" Name="zh-Hans" Parent="1" Flags="0"/>
+    <ROW Id="37" Name="zh-Hant" Parent="1" Flags="0"/>
+    <ROW Id="38" Name="zh-HK" Parent="1" Flags="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.GenericFileComponent">
+    <ROW Id="1" Name="StoreLogo.scale-100.jpg" Path="gobdify-app-icon-512x512.jpg" ParentDir="2"/>
+    <ROW Id="2" Name="Square150x150Logo.scale-100.png" Path="Generated Assets\Square150x150Logo.scale-100.png" ParentDir="2"/>
+    <ROW Id="3" Name="Square30x30Logo.scale-100.png" Path="&lt;AI_RES&gt;appx\SmallLogo.png" ParentDir="2"/>
+    <ROW Id="4" Name="SplashScreen.scale-100.png" Path="Generated Assets\SplashScreen.scale-100.png" ParentDir="2"/>
+    <ROW Id="5" Name="default.html" Path="&lt;AI_RES&gt;appx\default.html" ParentDir="1"/>
+    <ROW Id="6" Name="Square44x44Logo.scale-100.png" Path="Generated Assets\Square44x44Logo.scale-100.png" ParentDir="2"/>
+    <ROW Id="7" Name="Square70x70Logo.scale-100.png" Path="&lt;AI_RES&gt;appx\MediumLogo81.png" ParentDir="2"/>
+    <ROW Id="8" Name="Square71x71Logo.scale-100.png" Path="Generated Assets\Square71x71Logo.scale-100.png" ParentDir="2"/>
+    <ROW Id="9" Name="Wide310x150Logo.scale-100.png" Path="Generated Assets\Wide310x150Logo.scale-100.png" ParentDir="2"/>
+    <ROW Id="11" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ar\Microsoft.Maui.Controls.resources.dll" ParentDir="3"/>
+    <ROW Id="12" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ca\Microsoft.Maui.Controls.resources.dll" ParentDir="4"/>
+    <ROW Id="13" Name="CommunityToolkit.Maui.Core.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\CommunityToolkit.Maui.Core.dll" ParentDir="1"/>
+    <ROW Id="14" Name="CommunityToolkit.Maui.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\CommunityToolkit.Maui.dll" ParentDir="1"/>
+    <ROW Id="15" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\cs\Microsoft.Maui.Controls.resources.dll" ParentDir="5"/>
+    <ROW Id="16" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\da\Microsoft.Maui.Controls.resources.dll" ParentDir="6"/>
+    <ROW Id="17" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\de\Microsoft.Maui.Controls.resources.dll" ParentDir="7"/>
+    <ROW Id="18" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\el\Microsoft.Maui.Controls.resources.dll" ParentDir="8"/>
+    <ROW Id="19" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\es\Microsoft.Maui.Controls.resources.dll" ParentDir="9"/>
+    <ROW Id="20" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\fi\Microsoft.Maui.Controls.resources.dll" ParentDir="10"/>
+    <ROW Id="21" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\fr\Microsoft.Maui.Controls.resources.dll" ParentDir="11"/>
+    <ROW Id="22" Name="GoBDify.build.appxrecipe" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.build.appxrecipe" ParentDir="1"/>
+    <ROW Id="23" Name="GoBDify.deps.json" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.deps.json" ParentDir="1"/>
+    <ROW Id="24" Name="GoBDify.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.dll" ParentDir="1"/>
+    <ROW Id="25" Name="GoBDify.exe" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.exe" ParentDir="1"/>
+    <ROW Id="26" Name="GoBDify.pdb" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.pdb" ParentDir="1"/>
+    <ROW Id="27" Name="GoBDify.runtimeconfig.json" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\GoBDify.runtimeconfig.json" ParentDir="1"/>
+    <ROW Id="28" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\he\Microsoft.Maui.Controls.resources.dll" ParentDir="12"/>
+    <ROW Id="29" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\hi\Microsoft.Maui.Controls.resources.dll" ParentDir="13"/>
+    <ROW Id="30" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\hr\Microsoft.Maui.Controls.resources.dll" ParentDir="14"/>
+    <ROW Id="31" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\hu\Microsoft.Maui.Controls.resources.dll" ParentDir="15"/>
+    <ROW Id="32" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\id\Microsoft.Maui.Controls.resources.dll" ParentDir="16"/>
+    <ROW Id="33" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\it\Microsoft.Maui.Controls.resources.dll" ParentDir="17"/>
+    <ROW Id="34" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ja\Microsoft.Maui.Controls.resources.dll" ParentDir="18"/>
+    <ROW Id="35" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ko\Microsoft.Maui.Controls.resources.dll" ParentDir="19"/>
+    <ROW Id="36" Name="Microsoft.Bcl.Cryptography.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Bcl.Cryptography.dll" ParentDir="1"/>
+    <ROW Id="37" Name="Microsoft.Extensions.Configuration.Abstractions.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Configuration.Abstractions.dll" ParentDir="1"/>
+    <ROW Id="38" Name="Microsoft.Extensions.Configuration.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Configuration.dll" ParentDir="1"/>
+    <ROW Id="39" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.DependencyInjection.Abstractions.dll" ParentDir="1"/>
+    <ROW Id="40" Name="Microsoft.Extensions.DependencyInjection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.DependencyInjection.dll" ParentDir="1"/>
+    <ROW Id="41" Name="Microsoft.Extensions.Logging.Abstractions.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.Abstractions.dll" ParentDir="1"/>
+    <ROW Id="42" Name="Microsoft.Extensions.Logging.Debug.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.Debug.dll" ParentDir="1"/>
+    <ROW Id="43" Name="Microsoft.Extensions.Logging.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.dll" ParentDir="1"/>
+    <ROW Id="44" Name="Microsoft.Extensions.Options.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Options.dll" ParentDir="1"/>
+    <ROW Id="45" Name="Microsoft.Extensions.Primitives.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Primitives.dll" ParentDir="1"/>
+    <ROW Id="46" Name="Microsoft.Graphics.Canvas.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Graphics.Canvas.dll" ParentDir="1"/>
+    <ROW Id="47" Name="Microsoft.Graphics.Canvas.Interop.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Graphics.Canvas.Interop.dll" ParentDir="1"/>
+    <ROW Id="48" Name="Microsoft.InteractiveExperiences.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.InteractiveExperiences.Projection.dll" ParentDir="1"/>
+    <ROW Id="49" Name="Microsoft.IO.RecyclableMemoryStream.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.IO.RecyclableMemoryStream.dll" ParentDir="1"/>
+    <ROW Id="50" Name="Microsoft.Maui.Controls.Compatibility.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Controls.Compatibility.dll" ParentDir="1"/>
+    <ROW Id="51" Name="Microsoft.Maui.Controls.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Controls.dll" ParentDir="1"/>
+    <ROW Id="52" Name="Microsoft.Maui.Controls.Xaml.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Controls.Xaml.dll" ParentDir="1"/>
+    <ROW Id="53" Name="Microsoft.Maui.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.dll" ParentDir="1"/>
+    <ROW Id="54" Name="Microsoft.Maui.Essentials.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Essentials.dll" ParentDir="1"/>
+    <ROW Id="55" Name="Microsoft.Maui.Graphics.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Graphics.dll" ParentDir="1"/>
+    <ROW Id="56" Name="Microsoft.Maui.Graphics.Win2D.WinUI.Desktop.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Maui.Graphics.Win2D.WinUI.Desktop.dll" ParentDir="1"/>
+    <ROW Id="57" Name="Microsoft.Windows.ApplicationModel.DynamicDependency.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.ApplicationModel.DynamicDependency.Projection.dll" ParentDir="1"/>
+    <ROW Id="58" Name="Microsoft.Windows.ApplicationModel.Resources.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.ApplicationModel.Resources.Projection.dll" ParentDir="1"/>
+    <ROW Id="59" Name="Microsoft.Windows.ApplicationModel.WindowsAppRuntime.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.ApplicationModel.WindowsAppRuntime.Projection.dll" ParentDir="1"/>
+    <ROW Id="60" Name="Microsoft.Windows.AppLifecycle.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.AppLifecycle.Projection.dll" ParentDir="1"/>
+    <ROW Id="61" Name="Microsoft.Windows.AppNotifications.Builder.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.AppNotifications.Builder.Projection.dll" ParentDir="1"/>
+    <ROW Id="62" Name="Microsoft.Windows.AppNotifications.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.AppNotifications.Projection.dll" ParentDir="1"/>
+    <ROW Id="63" Name="Microsoft.Windows.Management.Deployment.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.Management.Deployment.Projection.dll" ParentDir="1"/>
+    <ROW Id="64" Name="Microsoft.Windows.PushNotifications.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.PushNotifications.Projection.dll" ParentDir="1"/>
+    <ROW Id="65" Name="Microsoft.Windows.SDK.NET.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.SDK.NET.dll" ParentDir="1"/>
+    <ROW Id="66" Name="Microsoft.Windows.Security.AccessControl.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.Security.AccessControl.Projection.dll" ParentDir="1"/>
+    <ROW Id="67" Name="Microsoft.Windows.System.Power.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.System.Power.Projection.dll" ParentDir="1"/>
+    <ROW Id="68" Name="Microsoft.Windows.System.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.System.Projection.dll" ParentDir="1"/>
+    <ROW Id="69" Name="Microsoft.Windows.Widgets.Projection.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.Widgets.Projection.dll" ParentDir="1"/>
+    <ROW Id="70" Name="Microsoft.WindowsAppRuntime.Bootstrap.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.dll" ParentDir="1"/>
+    <ROW Id="71" Name="Microsoft.WindowsAppRuntime.Bootstrap.Net.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.Net.dll" ParentDir="1"/>
+    <ROW Id="72" Name="Microsoft.WinUI.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Microsoft.WinUI.dll" ParentDir="1"/>
+    <ROW Id="73" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ms\Microsoft.Maui.Controls.resources.dll" ParentDir="20"/>
+    <ROW Id="74" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\nb\Microsoft.Maui.Controls.resources.dll" ParentDir="21"/>
+    <ROW Id="75" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\nl\Microsoft.Maui.Controls.resources.dll" ParentDir="22"/>
+    <ROW Id="76" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\pl\Microsoft.Maui.Controls.resources.dll" ParentDir="23"/>
+    <ROW Id="77" Name="App.xbf" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.xbf" ParentDir="25"/>
+    <ROW Id="78" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\pt\Microsoft.Maui.Controls.resources.dll" ParentDir="26"/>
+    <ROW Id="79" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\pt-BR\Microsoft.Maui.Controls.resources.dll" ParentDir="27"/>
+    <ROW Id="80" Name="resources.pri" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\resources.pri" ParentDir="1"/>
+    <ROW Id="81" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ro\Microsoft.Maui.Controls.resources.dll" ParentDir="28"/>
+    <ROW Id="82" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\ru\Microsoft.Maui.Controls.resources.dll" ParentDir="29"/>
+    <ROW Id="83" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\sk\Microsoft.Maui.Controls.resources.dll" ParentDir="30"/>
+    <ROW Id="84" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\sv\Microsoft.Maui.Controls.resources.dll" ParentDir="31"/>
+    <ROW Id="85" Name="System.Formats.Asn1.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\System.Formats.Asn1.dll" ParentDir="1"/>
+    <ROW Id="86" Name="System.Security.Cryptography.Pkcs.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\System.Security.Cryptography.Pkcs.dll" ParentDir="1"/>
+    <ROW Id="87" Name="System.Speech.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\System.Speech.dll" ParentDir="1"/>
+    <ROW Id="88" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\th\Microsoft.Maui.Controls.resources.dll" ParentDir="32"/>
+    <ROW Id="89" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\tr\Microsoft.Maui.Controls.resources.dll" ParentDir="33"/>
+    <ROW Id="90" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\uk\Microsoft.Maui.Controls.resources.dll" ParentDir="34"/>
+    <ROW Id="91" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\vi\Microsoft.Maui.Controls.resources.dll" ParentDir="35"/>
+    <ROW Id="92" Name="WinRT.Runtime.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\WinRT.Runtime.dll" ParentDir="1"/>
+    <ROW Id="93" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\zh-Hans\Microsoft.Maui.Controls.resources.dll" ParentDir="36"/>
+    <ROW Id="94" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\zh-Hant\Microsoft.Maui.Controls.resources.dll" ParentDir="37"/>
+    <ROW Id="95" Name="Microsoft.Maui.Controls.resources.dll" Path="GoBDify\bin\Release\net8.0-windows10.0.19041.0\win10-x64\zh-HK\Microsoft.Maui.Controls.resources.dll" ParentDir="38"/>
+    <ROW Id="100" Name="Square310x310Logo.scale-100.png" Path="Generated Assets\Square310x310Logo.scale-100.png" ParentDir="2"/>
+    <ROW Id="101" Name="StoreLogo.scale-125.jpg" Path="gobdify-app-icon-512x512.jpg" ParentDir="2"/>
+    <ROW Id="102" Name="StoreLogo.scale-150.jpg" Path="gobdify-app-icon-512x512.jpg" ParentDir="2"/>
+    <ROW Id="103" Name="StoreLogo.scale-200.jpg" Path="gobdify-app-icon-512x512.jpg" ParentDir="2"/>
+    <ROW Id="104" Name="StoreLogo.scale-400.jpg" Path="gobdify-app-icon-512x512.jpg" ParentDir="2"/>
+    <ROW Id="105" Name="Square150x150Logo.scale-120.png" Path="Generated Assets\Square150x150Logo.scale-120.png" ParentDir="2"/>
+    <ROW Id="106" Name="Square150x150Logo.scale-125.png" Path="Generated Assets\Square150x150Logo.scale-125.png" ParentDir="2"/>
+    <ROW Id="107" Name="Square150x150Logo.scale-140.png" Path="Generated Assets\Square150x150Logo.scale-140.png" ParentDir="2"/>
+    <ROW Id="108" Name="Square150x150Logo.scale-150.png" Path="Generated Assets\Square150x150Logo.scale-150.png" ParentDir="2"/>
+    <ROW Id="109" Name="Square150x150Logo.scale-160.png" Path="Generated Assets\Square150x150Logo.scale-160.png" ParentDir="2"/>
+    <ROW Id="110" Name="Square150x150Logo.scale-180.png" Path="Generated Assets\Square150x150Logo.scale-180.png" ParentDir="2"/>
+    <ROW Id="111" Name="Square150x150Logo.scale-200.png" Path="Generated Assets\Square150x150Logo.scale-200.png" ParentDir="2"/>
+    <ROW Id="112" Name="Square150x150Logo.scale-220.png" Path="Generated Assets\Square150x150Logo.scale-220.png" ParentDir="2"/>
+    <ROW Id="113" Name="Square150x150Logo.scale-225.png" Path="Generated Assets\Square150x150Logo.scale-225.png" ParentDir="2"/>
+    <ROW Id="114" Name="Square150x150Logo.scale-240.png" Path="Generated Assets\Square150x150Logo.scale-240.png" ParentDir="2"/>
+    <ROW Id="115" Name="Square150x150Logo.scale-250.png" Path="Generated Assets\Square150x150Logo.scale-250.png" ParentDir="2"/>
+    <ROW Id="116" Name="Square150x150Logo.scale-300.png" Path="Generated Assets\Square150x150Logo.scale-300.png" ParentDir="2"/>
+    <ROW Id="117" Name="Square150x150Logo.scale-400.png" Path="Generated Assets\Square150x150Logo.scale-400.png" ParentDir="2"/>
+    <ROW Id="118" Name="Square150x150Logo.scale-500.png" Path="Generated Assets\Square150x150Logo.scale-500.png" ParentDir="2"/>
+    <ROW Id="119" Name="Wide310x150Logo.scale-120.png" Path="Generated Assets\Wide310x150Logo.scale-120.png" ParentDir="2"/>
+    <ROW Id="120" Name="Wide310x150Logo.scale-125.png" Path="Generated Assets\Wide310x150Logo.scale-125.png" ParentDir="2"/>
+    <ROW Id="121" Name="Wide310x150Logo.scale-140.png" Path="Generated Assets\Wide310x150Logo.scale-140.png" ParentDir="2"/>
+    <ROW Id="122" Name="Wide310x150Logo.scale-150.png" Path="Generated Assets\Wide310x150Logo.scale-150.png" ParentDir="2"/>
+    <ROW Id="123" Name="Wide310x150Logo.scale-160.png" Path="Generated Assets\Wide310x150Logo.scale-160.png" ParentDir="2"/>
+    <ROW Id="124" Name="Wide310x150Logo.scale-180.png" Path="Generated Assets\Wide310x150Logo.scale-180.png" ParentDir="2"/>
+    <ROW Id="125" Name="Wide310x150Logo.scale-200.png" Path="Generated Assets\Wide310x150Logo.scale-200.png" ParentDir="2"/>
+    <ROW Id="126" Name="Wide310x150Logo.scale-220.png" Path="Generated Assets\Wide310x150Logo.scale-220.png" ParentDir="2"/>
+    <ROW Id="127" Name="Wide310x150Logo.scale-225.png" Path="Generated Assets\Wide310x150Logo.scale-225.png" ParentDir="2"/>
+    <ROW Id="128" Name="Wide310x150Logo.scale-240.png" Path="Generated Assets\Wide310x150Logo.scale-240.png" ParentDir="2"/>
+    <ROW Id="129" Name="Wide310x150Logo.scale-250.png" Path="Generated Assets\Wide310x150Logo.scale-250.png" ParentDir="2"/>
+    <ROW Id="130" Name="Wide310x150Logo.scale-300.png" Path="Generated Assets\Wide310x150Logo.scale-300.png" ParentDir="2"/>
+    <ROW Id="131" Name="Wide310x150Logo.scale-400.png" Path="Generated Assets\Wide310x150Logo.scale-400.png" ParentDir="2"/>
+    <ROW Id="132" Name="Wide310x150Logo.scale-500.png" Path="Generated Assets\Wide310x150Logo.scale-500.png" ParentDir="2"/>
+    <ROW Id="133" Name="Square310x310Logo.scale-120.png" Path="Generated Assets\Square310x310Logo.scale-120.png" ParentDir="2"/>
+    <ROW Id="134" Name="Square310x310Logo.scale-125.png" Path="Generated Assets\Square310x310Logo.scale-125.png" ParentDir="2"/>
+    <ROW Id="135" Name="Square310x310Logo.scale-140.png" Path="Generated Assets\Square310x310Logo.scale-140.png" ParentDir="2"/>
+    <ROW Id="136" Name="Square310x310Logo.scale-150.png" Path="Generated Assets\Square310x310Logo.scale-150.png" ParentDir="2"/>
+    <ROW Id="137" Name="Square310x310Logo.scale-160.png" Path="Generated Assets\Square310x310Logo.scale-160.png" ParentDir="2"/>
+    <ROW Id="138" Name="Square310x310Logo.scale-180.png" Path="Generated Assets\Square310x310Logo.scale-180.png" ParentDir="2"/>
+    <ROW Id="139" Name="Square310x310Logo.scale-200.png" Path="Generated Assets\Square310x310Logo.scale-200.png" ParentDir="2"/>
+    <ROW Id="140" Name="Square310x310Logo.scale-220.png" Path="Generated Assets\Square310x310Logo.scale-220.png" ParentDir="2"/>
+    <ROW Id="141" Name="Square310x310Logo.scale-225.png" Path="Generated Assets\Square310x310Logo.scale-225.png" ParentDir="2"/>
+    <ROW Id="142" Name="Square310x310Logo.scale-240.png" Path="Generated Assets\Square310x310Logo.scale-240.png" ParentDir="2"/>
+    <ROW Id="143" Name="Square310x310Logo.scale-250.png" Path="Generated Assets\Square310x310Logo.scale-250.png" ParentDir="2"/>
+    <ROW Id="144" Name="Square310x310Logo.scale-300.png" Path="Generated Assets\Square310x310Logo.scale-300.png" ParentDir="2"/>
+    <ROW Id="145" Name="Square310x310Logo.scale-400.png" Path="Generated Assets\Square310x310Logo.scale-400.png" ParentDir="2"/>
+    <ROW Id="146" Name="Square310x310Logo.scale-500.png" Path="Generated Assets\Square310x310Logo.scale-500.png" ParentDir="2"/>
+    <ROW Id="147" Name="Square44x44Logo.targetsize-16.png" Path="Generated Assets\Square44x44Logo.targetsize-16.png" ParentDir="2"/>
+    <ROW Id="148" Name="Square44x44Logo.targetsize-16_altform-unplated.png" Path="Generated Assets\Square44x44Logo.targetsize-16_altform-unplated.png" ParentDir="2"/>
+    <ROW Id="149" Name="Square44x44Logo.targetsize-16_altform-lightunplated.png" Path="Generated Assets\Square44x44Logo.targetsize-16_altform-lightunplated.png" ParentDir="2"/>
+    <ROW Id="150" Name="BadgeLogo.scale-100.png" Path="Generated Assets\BadgeLogo.scale-100.png" ParentDir="2"/>
+    <ROW Id="151" Name="Square44x44Logo.scale-120.png" Path="Generated Assets\Square44x44Logo.scale-120.png" ParentDir="2"/>
+    <ROW Id="152" Name="Square44x44Logo.scale-125.png" Path="Generated Assets\Square44x44Logo.scale-125.png" ParentDir="2"/>
+    <ROW Id="153" Name="Square44x44Logo.targetsize-24.png" Path="Generated Assets\Square44x44Logo.targetsize-24.png" ParentDir="2"/>
+    <ROW Id="154" Name="Square44x44Logo.targetsize-24_altform-unplated.png" Path="Generated Assets\Square44x44Logo.targetsize-24_altform-unplated.png" ParentDir="2"/>
+    <ROW Id="155" Name="Square44x44Logo.targetsize-24_altform-lightunplated.png" Path="Generated Assets\Square44x44Logo.targetsize-24_altform-lightunplated.png" ParentDir="2"/>
+    <ROW Id="156" Name="Square44x44Logo.scale-140.png" Path="Generated Assets\Square44x44Logo.scale-140.png" ParentDir="2"/>
+    <ROW Id="157" Name="Square44x44Logo.scale-150.png" Path="Generated Assets\Square44x44Logo.scale-150.png" ParentDir="2"/>
+    <ROW Id="158" Name="Square44x44Logo.targetsize-32.png" Path="Generated Assets\Square44x44Logo.targetsize-32.png" ParentDir="2"/>
+    <ROW Id="159" Name="Square44x44Logo.targetsize-32_altform-unplated.png" Path="Generated Assets\Square44x44Logo.targetsize-32_altform-unplated.png" ParentDir="2"/>
+    <ROW Id="160" Name="Square44x44Logo.targetsize-32_altform-lightunplated.png" Path="Generated Assets\Square44x44Logo.targetsize-32_altform-lightunplated.png" ParentDir="2"/>
+    <ROW Id="161" Name="Square44x44Logo.scale-160.png" Path="Generated Assets\Square44x44Logo.scale-160.png" ParentDir="2"/>
+    <ROW Id="162" Name="Square44x44Logo.scale-180.png" Path="Generated Assets\Square44x44Logo.scale-180.png" ParentDir="2"/>
+    <ROW Id="163" Name="Square44x44Logo.scale-200.png" Path="Generated Assets\Square44x44Logo.scale-200.png" ParentDir="2"/>
+    <ROW Id="164" Name="Square44x44Logo.targetsize-48.png" Path="Generated Assets\Square44x44Logo.targetsize-48.png" ParentDir="2"/>
+    <ROW Id="165" Name="Square44x44Logo.targetsize-48_altform-unplated.png" Path="Generated Assets\Square44x44Logo.targetsize-48_altform-unplated.png" ParentDir="2"/>
+    <ROW Id="166" Name="Square44x44Logo.targetsize-48_altform-lightunplated.png" Path="Generated Assets\Square44x44Logo.targetsize-48_altform-lightunplated.png" ParentDir="2"/>
+    <ROW Id="167" Name="Square44x44Logo.scale-220.png" Path="Generated Assets\Square44x44Logo.scale-220.png" ParentDir="2"/>
+    <ROW Id="168" Name="Square44x44Logo.scale-225.png" Path="Generated Assets\Square44x44Logo.scale-225.png" ParentDir="2"/>
+    <ROW Id="169" Name="Square44x44Logo.scale-240.png" Path="Generated Assets\Square44x44Logo.scale-240.png" ParentDir="2"/>
+    <ROW Id="170" Name="Square44x44Logo.scale-250.png" Path="Generated Assets\Square44x44Logo.scale-250.png" ParentDir="2"/>
+    <ROW Id="171" Name="Square44x44Logo.scale-300.png" Path="Generated Assets\Square44x44Logo.scale-300.png" ParentDir="2"/>
+    <ROW Id="172" Name="Square44x44Logo.scale-400.png" Path="Generated Assets\Square44x44Logo.scale-400.png" ParentDir="2"/>
+    <ROW Id="173" Name="Square44x44Logo.targetsize-256.png" Path="Generated Assets\Square44x44Logo.targetsize-256.png" ParentDir="2"/>
+    <ROW Id="174" Name="Square44x44Logo.targetsize-256_altform-unplated.png" Path="Generated Assets\Square44x44Logo.targetsize-256_altform-unplated.png" ParentDir="2"/>
+    <ROW Id="175" Name="Square44x44Logo.targetsize-256_altform-lightunplated.png" Path="Generated Assets\Square44x44Logo.targetsize-256_altform-lightunplated.png" ParentDir="2"/>
+    <ROW Id="176" Name="Square44x44Logo.scale-500.png" Path="Generated Assets\Square44x44Logo.scale-500.png" ParentDir="2"/>
+    <ROW Id="177" Name="SplashScreen.scale-120.png" Path="Generated Assets\SplashScreen.scale-120.png" ParentDir="2"/>
+    <ROW Id="178" Name="SplashScreen.scale-125.png" Path="Generated Assets\SplashScreen.scale-125.png" ParentDir="2"/>
+    <ROW Id="179" Name="SplashScreen.scale-140.png" Path="Generated Assets\SplashScreen.scale-140.png" ParentDir="2"/>
+    <ROW Id="180" Name="SplashScreen.scale-150.png" Path="Generated Assets\SplashScreen.scale-150.png" ParentDir="2"/>
+    <ROW Id="181" Name="SplashScreen.scale-160.png" Path="Generated Assets\SplashScreen.scale-160.png" ParentDir="2"/>
+    <ROW Id="182" Name="SplashScreen.scale-180.png" Path="Generated Assets\SplashScreen.scale-180.png" ParentDir="2"/>
+    <ROW Id="183" Name="SplashScreen.scale-200.png" Path="Generated Assets\SplashScreen.scale-200.png" ParentDir="2"/>
+    <ROW Id="184" Name="SplashScreen.scale-220.png" Path="Generated Assets\SplashScreen.scale-220.png" ParentDir="2"/>
+    <ROW Id="185" Name="SplashScreen.scale-225.png" Path="Generated Assets\SplashScreen.scale-225.png" ParentDir="2"/>
+    <ROW Id="186" Name="SplashScreen.scale-240.png" Path="Generated Assets\SplashScreen.scale-240.png" ParentDir="2"/>
+    <ROW Id="187" Name="SplashScreen.scale-250.png" Path="Generated Assets\SplashScreen.scale-250.png" ParentDir="2"/>
+    <ROW Id="188" Name="SplashScreen.scale-300.png" Path="Generated Assets\SplashScreen.scale-300.png" ParentDir="2"/>
+    <ROW Id="189" Name="SplashScreen.scale-400.png" Path="Generated Assets\SplashScreen.scale-400.png" ParentDir="2"/>
+    <ROW Id="190" Name="SplashScreen.scale-500.png" Path="Generated Assets\SplashScreen.scale-500.png" ParentDir="2"/>
+    <ROW Id="191" Name="BadgeLogo.scale-120.png" Path="Generated Assets\BadgeLogo.scale-120.png" ParentDir="2"/>
+    <ROW Id="192" Name="BadgeLogo.scale-125.png" Path="Generated Assets\BadgeLogo.scale-125.png" ParentDir="2"/>
+    <ROW Id="193" Name="BadgeLogo.scale-140.png" Path="Generated Assets\BadgeLogo.scale-140.png" ParentDir="2"/>
+    <ROW Id="194" Name="BadgeLogo.scale-150.png" Path="Generated Assets\BadgeLogo.scale-150.png" ParentDir="2"/>
+    <ROW Id="195" Name="BadgeLogo.scale-160.png" Path="Generated Assets\BadgeLogo.scale-160.png" ParentDir="2"/>
+    <ROW Id="196" Name="BadgeLogo.scale-180.png" Path="Generated Assets\BadgeLogo.scale-180.png" ParentDir="2"/>
+    <ROW Id="197" Name="BadgeLogo.scale-200.png" Path="Generated Assets\BadgeLogo.scale-200.png" ParentDir="2"/>
+    <ROW Id="198" Name="BadgeLogo.scale-220.png" Path="Generated Assets\BadgeLogo.scale-220.png" ParentDir="2"/>
+    <ROW Id="199" Name="BadgeLogo.scale-225.png" Path="Generated Assets\BadgeLogo.scale-225.png" ParentDir="2"/>
+    <ROW Id="200" Name="BadgeLogo.scale-240.png" Path="Generated Assets\BadgeLogo.scale-240.png" ParentDir="2"/>
+    <ROW Id="201" Name="BadgeLogo.scale-250.png" Path="Generated Assets\BadgeLogo.scale-250.png" ParentDir="2"/>
+    <ROW Id="202" Name="BadgeLogo.scale-300.png" Path="Generated Assets\BadgeLogo.scale-300.png" ParentDir="2"/>
+    <ROW Id="203" Name="BadgeLogo.scale-400.png" Path="Generated Assets\BadgeLogo.scale-400.png" ParentDir="2"/>
+    <ROW Id="204" Name="BadgeLogo.scale-500.png" Path="Generated Assets\BadgeLogo.scale-500.png" ParentDir="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.GenericXmlAttributeComponent">
+    <ROW XmlAttribute="AllowUserInteraction" XmlElement="UX" Name="AllowUserInteraction" Flags="0" Order="0" Value="false"/>
+    <ROW XmlAttribute="AppNameInTitle" XmlElement="UX" Name="AppNameInTitle" Flags="0" Order="0" Value="false"/>
+    <ROW XmlAttribute="BackgroundColor" XmlElement="VisualElements" Name="BackgroundColor" Flags="0" Order="0" Value="#5d76dd"/>
+    <ROW XmlAttribute="BackgroundColor_1" XmlElement="SplashScreen" Name="BackgroundColor" Flags="0" Order="0" Value="#8080ff"/>
+    <ROW XmlAttribute="BadgeLogo" XmlElement="LockScreen" Name="BadgeLogo" Flags="0" Order="0" FileId="150"/>
+    <ROW XmlAttribute="Description" XmlElement="VisualElements" Name="Description" Flags="0" Order="0" Value="eine Hilfs-App für die GoBD-konforme Dokumentenarchivierung"/>
+    <ROW XmlAttribute="DisplayName" XmlElement="VisualElements" Name="DisplayName" Flags="0" Order="1" Value="GoBDify"/>
+    <ROW XmlAttribute="Executable" XmlElement="Application" Name="Executable" Flags="0" Order="0" FileId="25"/>
+    <ROW XmlAttribute="HorizontalAlignment" XmlElement="LaunchWhenReady" Name="HorizontalAlignment" Flags="0" Order="0" Value="left"/>
+    <ROW XmlAttribute="HorizontalAlignment_1" XmlElement="Icon" Name="HorizontalAlignment" Flags="0" Order="0" Value="left"/>
+    <ROW XmlAttribute="HorizontalAlignment_2" XmlElement="Buttons" Name="HorizontalAlignment" Flags="0" Order="0" Value="left"/>
+    <ROW XmlAttribute="Id" XmlElement="Application" Name="Id" Flags="0" Order="0" Value="software.mielke.gobdify"/>
+    <ROW XmlAttribute="IgnorableNamespaces" XmlElement="AppInstallerUX" Name="IgnorableNamespaces" Flags="0" Order="0" Value="ux ux2"/>
+    <ROW XmlAttribute="Image" XmlElement="SplashScreen" Name="Image" Flags="0" Order="0" FileId="4"/>
+    <ROW XmlAttribute="IsSecondaryButtonAccent" XmlElement="Buttons" Name="IsSecondaryButtonAccent" Flags="0" Order="0" Value="false"/>
+    <ROW XmlAttribute="Language" XmlElement="Resource" Name="Language" Flags="0" Order="0" Value="de-DE"/>
+    <ROW XmlAttribute="MaxVersionTested" XmlElement="TargetDeviceFamily" Name="MaxVersionTested" Flags="0" Order="0" Value="10.0.22621.0"/>
+    <ROW XmlAttribute="MaxVersionTested_1" XmlElement="TargetDeviceFamily_1" Name="MaxVersionTested" Flags="0" Order="0" Value="10.0.22621.0"/>
+    <ROW XmlAttribute="MaxVersionTested_2" XmlElement="TargetDeviceFamily_2" Name="MaxVersionTested" Flags="0" Order="0" Value="10.0.22621.0"/>
+    <ROW XmlAttribute="MinVersion" XmlElement="TargetDeviceFamily" Name="MinVersion" Flags="0" Order="1" Value="10.0.17763.0"/>
+    <ROW XmlAttribute="MinVersion_1" XmlElement="TargetDeviceFamily_1" Name="MinVersion" Flags="0" Order="0" Value="10.0.17763.0"/>
+    <ROW XmlAttribute="MinVersion_2" XmlElement="TargetDeviceFamily_2" Name="MinVersion" Flags="0" Order="0" Value="10.0.17763.0"/>
+    <ROW XmlAttribute="Mode" XmlElement="AppInformation" Name="Mode" Flags="0" Order="0" Value="flyout"/>
+    <ROW XmlAttribute="Name" XmlElement="Identity" Name="Name" Flags="0" Order="0" Value="12430ThomasMielkeSoftware.335520ED7202A"/>
+    <ROW XmlAttribute="Name_1" XmlElement="TargetDeviceFamily" Name="Name" Flags="0" Order="2" Value="Windows.Universal"/>
+    <ROW XmlAttribute="Name_2" XmlElement="TargetDeviceFamily_1" Name="Name" Flags="0" Order="0" Value="Windows.Desktop"/>
+    <ROW XmlAttribute="Name_3" XmlElement="TargetDeviceFamily_2" Name="Name" Flags="0" Order="0" Value="Windows.Mobile"/>
+    <ROW XmlAttribute="Name_4" XmlElement="Capability" Name="Name" Flags="0" Order="0" Value="internetClient"/>
+    <ROW XmlAttribute="Name_5" XmlElement="Capability_1" Name="Name" Flags="0" Order="0" Value="removableStorage"/>
+    <ROW XmlAttribute="Notification" XmlElement="LockScreen" Name="Notification" Flags="0" Order="0" Value="badge"/>
+    <ROW XmlAttribute="Orientation" XmlElement="Buttons" Name="Orientation" Flags="0" Order="0" Value="horizontal"/>
+    <ROW XmlAttribute="PhoneProductId" XmlElement="PhoneIdentity" Name="PhoneProductId" Flags="0" Order="0" Value="09A47D0E-1E73-456F-BD51-9C68A8223E25"/>
+    <ROW XmlAttribute="PhonePublisherId" XmlElement="PhoneIdentity" Name="PhonePublisherId" Flags="0" Order="1" Value="00000000-0000-0000-0000-000000000000"/>
+    <ROW XmlAttribute="Preference" XmlElement="Rotation" Name="Preference" Flags="0" Order="0" Value="portrait"/>
+    <ROW XmlAttribute="Preference_1" XmlElement="Rotation_1" Name="Preference" Flags="0" Order="0" Value="landscape"/>
+    <ROW XmlAttribute="PrimaryButtonMode" XmlElement="Buttons" Name="PrimaryButtonMode" Flags="0" Order="0" Value="normal"/>
+    <ROW XmlAttribute="ProcessorArchitecture" XmlElement="Identity" Name="ProcessorArchitecture" Flags="0" Order="0" Value="neutral"/>
+    <ROW XmlAttribute="Publisher" XmlElement="Identity" Name="Publisher" Flags="0" Order="0" Value="CN=Thomas Mielke"/>
+    <ROW XmlAttribute="Scale" XmlElement="Resource_1" Name="Scale" Flags="0" Order="0" Value="100"/>
+    <ROW XmlAttribute="SecondaryButtonMode" XmlElement="Buttons" Name="SecondaryButtonMode" Flags="0" Order="0" Value="normal"/>
+    <ROW XmlAttribute="ShortName" XmlElement="DefaultTile" Name="ShortName" Flags="0" Order="0" Value="GoBDify"/>
+    <ROW XmlAttribute="Size" XmlElement="Icon" Name="Size" Flags="0" Order="0" Value="default"/>
+    <ROW XmlAttribute="Square150x150Logo" XmlElement="VisualElements" Name="Square150x150Logo" Flags="0" Order="0" FileId="2"/>
+    <ROW XmlAttribute="Square310x310Logo" XmlElement="DefaultTile" Name="Square310x310Logo" Flags="0" Order="0" FileId="100"/>
+    <ROW XmlAttribute="Square44x44Logo" XmlElement="VisualElements" Name="Square44x44Logo" Flags="0" Order="0" FileId="6"/>
+    <ROW XmlAttribute="Square71x71Logo" XmlElement="DefaultTile" Name="Square71x71Logo" Flags="0" Order="0" FileId="8"/>
+    <ROW XmlAttribute="Version" XmlElement="Identity" Name="Version" Flags="0" Order="0" Value="1.1.0.0"/>
+    <ROW XmlAttribute="Version_1" XmlElement="AppInstallerUX" Name="Version" Flags="0" Order="0" Value="1.0.0"/>
+    <ROW XmlAttribute="Wide310x150Logo" XmlElement="DefaultTile" Name="Wide310x150Logo" Flags="0" Order="0" FileId="9"/>
+    <ROW XmlAttribute="xmlns" XmlElement="Package" Name="xmlns" Flags="0" Order="0" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/2"/>
+    <ROW XmlAttribute="xmlns_1" XmlElement="AppInstallerUX" Name="xmlns" Flags="0" Order="0" Value="http://schemas.microsoft.com/msix/appinstallerux"/>
+    <ROW XmlAttribute="xmlnsbuild" XmlElement="Package" Name="xmlns:build" Flags="0" Order="1" Value="http://schemas.microsoft.com/developer/appx/2015/build"/>
+    <ROW XmlAttribute="xmlnscom" XmlElement="Package" Name="xmlns:com" Flags="0" Order="25" Value="http://schemas.microsoft.com/appx/manifest/com/windows10"/>
+    <ROW XmlAttribute="xmlnscom2" XmlElement="Package" Name="xmlns:com2" Flags="0" Order="26" Value="http://schemas.microsoft.com/appx/manifest/com/windows10/2"/>
+    <ROW XmlAttribute="xmlnscom3" XmlElement="Package" Name="xmlns:com3" Flags="0" Order="27" Value="http://schemas.microsoft.com/appx/manifest/com/windows10/3"/>
+    <ROW XmlAttribute="xmlnsdesktop" XmlElement="Package" Name="xmlns:desktop" Flags="0" Order="18" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10"/>
+    <ROW XmlAttribute="xmlnsdesktop2" XmlElement="Package" Name="xmlns:desktop2" Flags="0" Order="19" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"/>
+    <ROW XmlAttribute="xmlnsdesktop3" XmlElement="Package" Name="xmlns:desktop3" Flags="0" Order="20" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10/3"/>
+    <ROW XmlAttribute="xmlnsdesktop4" XmlElement="Package" Name="xmlns:desktop4" Flags="0" Order="21" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"/>
+    <ROW XmlAttribute="xmlnsdesktop5" XmlElement="Package" Name="xmlns:desktop5" Flags="0" Order="22" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"/>
+    <ROW XmlAttribute="xmlnsdesktop6" XmlElement="Package" Name="xmlns:desktop6" Flags="0" Order="23" Value="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"/>
+    <ROW XmlAttribute="xmlnsmp" XmlElement="Package" Name="xmlns:mp" Flags="0" Order="2" Value="http://schemas.microsoft.com/appx/2014/phone/manifest"/>
+    <ROW XmlAttribute="xmlnsrescap" XmlElement="Package" Name="xmlns:rescap" Flags="0" Order="12" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"/>
+    <ROW XmlAttribute="xmlnsrescap2" XmlElement="Package" Name="xmlns:rescap2" Flags="0" Order="13" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/2"/>
+    <ROW XmlAttribute="xmlnsrescap3" XmlElement="Package" Name="xmlns:rescap3" Flags="0" Order="14" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/3"/>
+    <ROW XmlAttribute="xmlnsrescap4" XmlElement="Package" Name="xmlns:rescap4" Flags="0" Order="15" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/4"/>
+    <ROW XmlAttribute="xmlnsrescap5" XmlElement="Package" Name="xmlns:rescap5" Flags="0" Order="16" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/5"/>
+    <ROW XmlAttribute="xmlnsrescap6" XmlElement="Package" Name="xmlns:rescap6" Flags="0" Order="17" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities/6"/>
+    <ROW XmlAttribute="xmlnsserverpreview" XmlElement="Package" Name="xmlns:serverpreview" Flags="0" Order="24" Value="http://schemas.microsoft.com/appx/manifest/serverpreview/windows10"/>
+    <ROW XmlAttribute="xmlnsuap" XmlElement="Package" Name="xmlns:uap" Flags="0" Order="3" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10"/>
+    <ROW XmlAttribute="xmlnsuap10" XmlElement="Package" Name="xmlns:uap10" Flags="0" Order="11" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"/>
+    <ROW XmlAttribute="xmlnsuap2" XmlElement="Package" Name="xmlns:uap2" Flags="0" Order="4" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"/>
+    <ROW XmlAttribute="xmlnsuap3" XmlElement="Package" Name="xmlns:uap3" Flags="0" Order="5" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"/>
+    <ROW XmlAttribute="xmlnsuap4" XmlElement="Package" Name="xmlns:uap4" Flags="0" Order="6" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/4"/>
+    <ROW XmlAttribute="xmlnsuap5" XmlElement="Package" Name="xmlns:uap5" Flags="0" Order="7" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"/>
+    <ROW XmlAttribute="xmlnsuap6" XmlElement="Package" Name="xmlns:uap6" Flags="0" Order="8" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"/>
+    <ROW XmlAttribute="xmlnsuap7" XmlElement="Package" Name="xmlns:uap7" Flags="0" Order="9" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/7"/>
+    <ROW XmlAttribute="xmlnsuap8" XmlElement="Package" Name="xmlns:uap8" Flags="0" Order="10" Value="http://schemas.microsoft.com/appx/manifest/uap/windows10/8"/>
+    <ROW XmlAttribute="xmlnsux" XmlElement="AppInstallerUX" Name="xmlns:ux" Flags="0" Order="0" Value="http://schemas.microsoft.com/msix/appinstallerux"/>
+    <ROW XmlAttribute="xmlnsux2" XmlElement="AppInstallerUX" Name="xmlns:ux2" Flags="0" Order="0" Value="http://schemas.microsoft.com/msix/appinstallerux"/>
+    <ROW XmlAttribute="xmlnswincap" XmlElement="Package" Name="xmlns:wincap" Flags="0" Order="28" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities"/>
+    <ROW XmlAttribute="xmlnswincap2" XmlElement="Package" Name="xmlns:wincap2" Flags="0" Order="29" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities/2"/>
+    <ROW XmlAttribute="xmlnswincap3" XmlElement="Package" Name="xmlns:wincap3" Flags="0" Order="30" Value="http://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities/3"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.GenericXmlElementComponent">
+    <ROW XmlElement="AppInformation" ParentElement="AppInstallerUX" Name="AppInformation" Order="3" Flags="0" Type="0"/>
+    <ROW XmlElement="AppInstallerUX" Name="AppInstallerUX" Order="0" Flags="0" Type="0"/>
+    <ROW XmlElement="Application" ParentElement="Applications" Name="Application" Order="0" Flags="0" Type="4"/>
+    <ROW XmlElement="Applications" ParentElement="Package" Name="Applications" Order="4" Flags="0" Type="3"/>
+    <ROW XmlElement="Bundle" Name="Bundle" Order="0" Flags="0" Type="0"/>
+    <ROW XmlElement="Buttons" ParentElement="AppInstallerUX" Name="Buttons" Order="1" Flags="0" Type="0"/>
+    <ROW XmlElement="Capabilities" ParentElement="Package" Name="Capabilities" Order="6" Flags="0" Type="0"/>
+    <ROW XmlElement="Capability" ParentElement="Capabilities" Name="Capability" Order="0" Flags="0" Type="0"/>
+    <ROW XmlElement="Capability_1" ParentElement="Capabilities" Name="Capability" Order="1" Flags="0" Type="0"/>
+    <ROW XmlElement="DefaultTile" ParentElement="VisualElements" Name="DefaultTile" Order="2" Flags="0" Type="0"/>
+    <ROW XmlElement="Dependencies" ParentElement="Package" Name="Dependencies" Order="5" Flags="30" Type="0"/>
+    <ROW XmlElement="DisplayName" ParentElement="Properties" Name="DisplayName" Order="0" Flags="0" Text="GoBDify" Type="1"/>
+    <ROW XmlElement="Icon" ParentElement="AppInstallerUX" Name="Icon" Order="4" Flags="0" Type="0"/>
+    <ROW XmlElement="Identity" ParentElement="Package" Name="Identity" Order="0" Flags="0" Type="1"/>
+    <ROW XmlElement="InitialRotationPreference" ParentElement="VisualElements" Name="InitialRotationPreference" Order="1" Flags="0" Type="0"/>
+    <ROW XmlElement="LaunchWhenReady" ParentElement="AppInstallerUX" Name="LaunchWhenReady" Order="2" Flags="0" Type="0"/>
+    <ROW XmlElement="LockScreen" ParentElement="VisualElements" Name="LockScreen" Order="3" Flags="0" Type="0"/>
+    <ROW XmlElement="Logo" ParentElement="Properties" Name="Logo" Order="2" Flags="0" FileId="1" Type="0"/>
+    <ROW XmlElement="Package" Name="Package" Order="0" Flags="30" Type="6"/>
+    <ROW XmlElement="PhoneIdentity" ParentElement="Package" Name="PhoneIdentity" Order="5" Flags="30" Type="0"/>
+    <ROW XmlElement="Properties" ParentElement="Package" Name="Properties" Order="1" Flags="0" Type="1"/>
+    <ROW XmlElement="PublisherDisplayName" ParentElement="Properties" Name="PublisherDisplayName" Order="1" Flags="0" Text="Thomas Mielke Softwareentwicklung" Type="1"/>
+    <ROW XmlElement="Resource" ParentElement="Resources" Name="Resource" Order="1" Flags="0" Type="0"/>
+    <ROW XmlElement="Resource_1" ParentElement="Resources" Name="Resource" Order="1" Flags="0" Type="0"/>
+    <ROW XmlElement="Resources" ParentElement="Package" Name="Resources" Order="3" Flags="0" Type="1"/>
+    <ROW XmlElement="Rotation" ParentElement="InitialRotationPreference" Name="Rotation" Order="0" Flags="0" Type="1"/>
+    <ROW XmlElement="Rotation_1" ParentElement="InitialRotationPreference" Name="Rotation" Order="1" Flags="0" Type="1"/>
+    <ROW XmlElement="SplashScreen" ParentElement="VisualElements" Name="SplashScreen" Order="0" Flags="0" Type="1"/>
+    <ROW XmlElement="TargetDeviceFamily" ParentElement="Dependencies" Name="TargetDeviceFamily" Order="0" Flags="30" Type="28"/>
+    <ROW XmlElement="TargetDeviceFamily_1" ParentElement="Dependencies" Name="TargetDeviceFamily" Order="1" Flags="0" Type="28"/>
+    <ROW XmlElement="TargetDeviceFamily_2" ParentElement="Dependencies" Name="TargetDeviceFamily" Order="2" Flags="0" Type="28"/>
+    <ROW XmlElement="UX" ParentElement="AppInstallerUX" Name="UX" Order="0" Flags="0" Type="0"/>
+    <ROW XmlElement="VisualElements" ParentElement="Application" Name="VisualElements" Order="0" Flags="0" Type="1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.GenericXmlFileComponent">
+    <ROW XmlFile="AppxBundleManifest.xml" FileName="AppxBundleManifest.xml" RootElement="Bundle" Flags="89" Version="1.0" Encoding="UTF-8" IndentUnits="2"/>
+    <ROW XmlFile="AppxManifest.xml" FileName="AppxManifest.xml" RootElement="Package" Flags="89" Version="1.0" Encoding="utf-8" IndentUnits="2"/>
+    <ROW XmlFile="MsixAppInstallerData.xml" FileName="MsixAppInstallerData.xml" RootElement="AppInstallerUX" Flags="89" Version="1.0" Encoding="UTF-8" IndentUnits="2"/>
+  </COMPONENT>
+</DOCUMENT>
