@@ -32,7 +32,7 @@ public partial class MainPage : ContentPage
     {
         if (path == null || path == "")
         {
-            folderSelectBtn.Text = $"Bitte Ordner auswählen";
+            folderSelectBtn.Text = "Bitte Ordner auswählen";
             timestampBtn.IsEnabled = false;
         }
         else
@@ -55,6 +55,8 @@ public partial class MainPage : ContentPage
                 folder = await FolderPicker.PickAsync(folderPath);
             if (folder?.Folder?.Path == null)  // abgebrochen?
             {
+                if (folder.Exception != null)
+                    DisplayAlert("Problem bei Ordnerauswahl", $"Bitte versuchen einen lokalen Ordner auzuwählen. Mit Cloud Storage gibt es derzeit noch ein paar Probleme. Ursprüngliche Meldung:  {folder.Exception.Message}", "Abbrechen");
                 progressBar.IsVisible = false;
                 return;
             }
