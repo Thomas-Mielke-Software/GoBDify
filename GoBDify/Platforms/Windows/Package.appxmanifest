@@ -6,7 +6,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity Name="maui-package-name-placeholder" Publisher="E=thomas@mielke.software, CN=Thomas Mielke, O=Thomas Mielke, L=Hamburg, C=DE" Version="1.1.0.0" />
+  <Identity Name="maui-package-name-placeholder" Publisher="E=thomas@mielke.software, CN=Thomas Mielke, O=Thomas Mielke, L=Hamburg, C=DE" Version="1.2.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="AA36A32B-5ED2-44E9-B4C9-D7099DBE3952" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -47,7 +47,6 @@
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
     <Capability Name="internetClient"/>
-    <uap:Capability Name="removableStorage"/>
   </Capabilities>
 
 </Package>

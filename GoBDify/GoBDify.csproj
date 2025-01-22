@@ -42,6 +42,14 @@
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 		<WindowsPackageType>MSIX</WindowsPackageType>
 		<NoWin32Manifest>true</NoWin32Manifest>
+		<GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+		<AppxPackageSigningTimestampServerUrl>http://time.certum.pl</AppxPackageSigningTimestampServerUrl>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<AppInstallerUri>https://easyct.de/GoBDify_x64.msix</AppInstallerUri>
+		<HoursBetweenUpdateChecks>672</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(Configuration)' == 'Release'">
@@ -58,8 +66,8 @@
 	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
 	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
 	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
@@ -69,41 +77,41 @@
 	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
 	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
 	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <EnableSGenConc>True</EnableSGenConc>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	  <EnableSGenConc>True</EnableSGenConc>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.17763.0|AnyCPU'">

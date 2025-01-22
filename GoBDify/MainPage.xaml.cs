@@ -214,7 +214,7 @@ public partial class MainPage : ContentPage
                         shaFileContent.Append(hash);
                         shaFileContent.Append(" *");
                         shaFileContent.Append(file.Name);
-                        shaFileContent.Append(Environment.NewLine);
+                        shaFileContent.Append("\n");        // Unix-Zeilenumbruch benötigt
 
                         OutputLine($"NEU: {file.Name}");
 
