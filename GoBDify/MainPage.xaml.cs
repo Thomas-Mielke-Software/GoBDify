@@ -16,6 +16,7 @@ using Microsoft.Maui.Storage;
 using System.Security.Cryptography.Pkcs;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace GoBDify;
 
@@ -28,7 +29,7 @@ public partial class MainPage : ContentPage
         SetFolderPath(Preferences.Get("DefaultFolder", null));
     }
 
-    private void SetFolderPath(string path)
+    private void SetFolderPath(string? path)
     {
         if (path == null || path == "")
         {
@@ -63,6 +64,13 @@ public partial class MainPage : ContentPage
             folderPath = folder?.Folder.Path;
             Preferences.Set("DefaultFolder", folderPath);
             SetFolderPath(folderPath);
+#if WINDOWS
+            if (folderPath != null)
+            {
+                var windowsStorageFolder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(folderPath);
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", windowsStorageFolder);
+            }
+#endif
         }
         catch
         {

@@ -48,7 +48,7 @@
 		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
-		<AppInstallerUri>https://easyct.de/GoBDify_x64.msix</AppInstallerUri>
+		<AppInstallerUri>https://easyct.de/GoBDify_arm64.msix</AppInstallerUri>
 		<HoursBetweenUpdateChecks>672</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
