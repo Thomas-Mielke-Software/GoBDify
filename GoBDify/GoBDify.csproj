@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<!--TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks-->
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -38,7 +38,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<AndroidSigningKeyStore>thomiel-release-key.keystore</AndroidSigningKeyStore>
 		<DefaultLanguage>de-de</DefaultLanguage>
-		<PackageCertificateThumbprint>C89845C362980A5A080FDDE3C508CAA127006C6F</PackageCertificateThumbprint>
+		<PackageCertificateThumbprint>CB479A07014C79001D435A6B7588D363C1451A8A</PackageCertificateThumbprint>
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 		<WindowsPackageType>MSIX</WindowsPackageType>
 		<NoWin32Manifest>true</NoWin32Manifest>
@@ -54,7 +54,7 @@
 
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(Configuration)' == 'Release'">
 		<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
-		<PackageCertificateThumbprint>C89845C362980A5A080FDDE3C508CAA127006C6F</PackageCertificateThumbprint>
+		<PackageCertificateThumbprint>cb479a07014c79001d435a6b7588d363c1451a8a</PackageCertificateThumbprint>
 	</PropertyGroup>
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
 		<RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
