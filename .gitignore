@@ -13,6 +13,9 @@ GoBDify/GoBDify.csproj.user
 *.msix.zip
 *.back(*).aip
 
+# Distributions-Ordner mit gepackten CLI-Binaries
+/dist/
+
 # Android-Signaturkeystore (privat, lokal lassen)
 *.keystore
 
