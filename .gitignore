@@ -3,3 +3,23 @@
 **/bin/
 **/obj/
 GoBDify/GoBDify.csproj.user
+
+# Publish-Profile (lokal, projektspezifisch)
+**/Properties/PublishProfiles/
+
+# MSIX-Builds und Vorgängerversionen
+*.msix
+*.msixupload
+*.msix.zip
+*.back(*).aip
+
+# Android-Signaturkeystore (privat, lokal lassen)
+*.keystore
+
+# Testartefakte aus Audit/Timestamp-Läufen im Repo-Root
+/timestamp*.sha256
+/timestamp*.sha256.tst
+
+# Doppelte Publish-Skripte in Subfolders (Master liegt im Repo-Root)
+/GoBDify/publizieren.bat
+/GoBDify.Cli/publizieren-cli.bat
