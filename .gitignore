@@ -16,6 +16,9 @@ GoBDify/GoBDify.csproj.user
 # Distributions-Ordner mit gepackten CLI-Binaries
 /dist/
 
+# Staging-Ordner für CLI-Publish vor dem Zippen
+/publish/
+
 # Android-Signaturkeystore (privat, lokal lassen)
 *.keystore
 
@@ -23,5 +26,7 @@ GoBDify/GoBDify.csproj.user
 /timestamp*.sha256
 /timestamp*.sha256.tst
 
-# Doppelte Publish-Skripte in Subfolders (Master liegt im Repo-Root)
+# Lokale Kopien von publizieren.bat in Subfolders (Master liegt im Repo-Root)
+/GoBDify/publizieren.bat
+/GoBDify.Cli/publizieren.bat
 /GoBDify.Cli/publizieren-cli.bat
