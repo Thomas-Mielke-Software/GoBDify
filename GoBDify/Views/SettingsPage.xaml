@@ -16,7 +16,7 @@
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                         <VerticalStackLayout Grid.Column="0" Spacing="2">
                             <Label Text="Schweiz-Modus" FontAttributes="Bold" TextColor="#111827"/>
-                            <Label Text="Jeder Timestamp wird gleichzeitig bei drei unabhängigen Diensten beglaubigt. Erhöht die Beweiskraft erheblich."
+                            <Label Text="Jeder Timestamp wird gleichzeitig bei drei voneinander unabhängigen Zertifizierungsstellen beglaubigt. Hintergrund ist Art. 9 der Schweizerischen Geschäftsbücherverordnung (GeBüV, SR 221.431), der für die elektronische Aufbewahrung geschäftsrelevanter Unterlagen die unveränderbare Speicherung verlangt; die kombinierte Beglaubigung durch drei unabhängige Dienste ist die etablierte Umsetzung dieser Anforderung."
                                    FontSize="12" TextColor="#6B7280"/>
                         </VerticalStackLayout>
                         <Switch Grid.Column="1" x:Name="SwissSwitch" Toggled="OnSwissToggled" VerticalOptions="Center"/>

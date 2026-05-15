@@ -43,11 +43,37 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    private bool _suppressToggle;
+
     private void OnTsaToggled(string id, bool value)
     {
+        if (_suppressToggle) return;
+
         var list = _workspace.Settings.SelectedTsaIds;
-        if (value && !list.Contains(id)) list.Add(id);
-        else if (!value) list.Remove(id);
+        if (value)
+        {
+            if (!_workspace.Settings.SwissMode)
+            {
+                // Single-Select außerhalb des Schweiz-Modus: alle anderen abwählen
+                list.Clear();
+                list.Add(id);
+                _suppressToggle = true;
+                try
+                {
+                    foreach (var (otherId, cb) in _checkboxes)
+                        cb.IsChecked = (otherId == id);
+                }
+                finally { _suppressToggle = false; }
+            }
+            else if (!list.Contains(id))
+            {
+                list.Add(id);
+            }
+        }
+        else
+        {
+            list.Remove(id);
+        }
         _workspace.SaveSettings();
         UpdateValidation();
     }
@@ -55,6 +81,22 @@ public partial class SettingsPage : ContentPage
     private void OnSwissToggled(object sender, ToggledEventArgs e)
     {
         _workspace.Settings.SwissMode = e.Value;
+
+        // beim Verlassen des Schweiz-Modus auf Single-Select reduzieren
+        if (!e.Value && _workspace.Settings.SelectedTsaIds.Count > 1)
+        {
+            var keep = _workspace.Settings.SelectedTsaIds[0];
+            _workspace.Settings.SelectedTsaIds.Clear();
+            _workspace.Settings.SelectedTsaIds.Add(keep);
+            _suppressToggle = true;
+            try
+            {
+                foreach (var (otherId, cb) in _checkboxes)
+                    cb.IsChecked = (otherId == keep);
+            }
+            finally { _suppressToggle = false; }
+        }
+
         _workspace.SaveSettings();
         UpdateValidation();
     }
