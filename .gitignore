@@ -24,5 +24,4 @@ GoBDify/GoBDify.csproj.user
 /timestamp*.sha256.tst
 
 # Doppelte Publish-Skripte in Subfolders (Master liegt im Repo-Root)
-/GoBDify/publizieren.bat
 /GoBDify.Cli/publizieren-cli.bat

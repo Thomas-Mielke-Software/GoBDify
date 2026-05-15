@@ -10,11 +10,12 @@ echo Version: %VERSION%
 
 if not exist dist mkdir dist
 
-call :build win-x64    gobdify.exe || goto :fail
-call :build linux-x64  gobdify     || goto :fail
-call :build linux-arm64 gobdify    || goto :fail
-call :build osx-x64    gobdify     || goto :fail
-call :build osx-arm64  gobdify     || goto :fail
+call :build win-x64      windows  x64    gobdify.exe || goto :fail
+call :build win-arm64    windows  arm64  gobdify.exe || goto :fail
+call :build linux-x64    linux    x64    gobdify     || goto :fail
+call :build linux-arm64  linux    arm64  gobdify     || goto :fail
+call :build osx-x64      macos    x64    gobdify     || goto :fail
+call :build osx-arm64    macos    arm64  gobdify     || goto :fail
 
 echo.
 echo Fertig. Pakete unter dist\:
@@ -23,11 +24,13 @@ goto :eof
 
 :build
 set RID=%~1
-set BIN=%~2
+set PLATFORM=%~2
+set ARCH=%~3
+set BIN=%~4
 echo === %RID% ===
 dotnet publish %CSPROJ% -r %RID% %FLAGS% || exit /b 1
 set SRC=GoBDify.Cli\bin\Release\net8.0\%RID%\publish\%BIN%
-set ZIP=dist\gobdify-%VERSION%-%RID%.zip
+set ZIP=dist\gobdify-cli-%VERSION%-%PLATFORM%-%ARCH%.zip
 if exist "%ZIP%" del "%ZIP%"
 powershell -NoProfile -Command "Compress-Archive -Path '%SRC%' -DestinationPath '%ZIP%'" || exit /b 1
 echo   -^> %ZIP%
