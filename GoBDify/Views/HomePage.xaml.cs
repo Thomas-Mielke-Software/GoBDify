@@ -259,6 +259,8 @@ public partial class HomePage : ContentPage
 
     private void FinalizeReport(AuditReport report, ChainResult? newTimestamp)
     {
+        bool emptyAudit = report.Chain.Count == 0 && newTimestamp?.NewChainNumber == null;
+
         RenderSummary(report, newTimestamp);
 
         if (newTimestamp == null && report.NewFiles.Count > 0)
@@ -272,9 +274,19 @@ public partial class HomePage : ContentPage
                 NewFilesList.Children.Add(new Label { Text = "• " + f, FontSize = 13, TextColor = Color.FromArgb("#92400E") });
         }
 
-        FooterLabel.Text = report.Chain.Count == 0
+        int totalAfter = report.Chain.Sum(c => c.Files.Count) + (newTimestamp?.NewChainNumber != null ? report.NewFiles.Count : 0);
+        int chainsAfter = report.Chain.Count + (newTimestamp?.NewChainNumber != null ? 1 : 0);
+        FooterLabel.Text = chainsAfter == 0
             ? "Noch keine Hash-Kette in diesem Ordner."
-            : $"{Timestamps(report.Chain.Count)}  •  {Files(report.Chain.Sum(c => c.Files.Count))} in der Kette";
+            : $"{Timestamps(chainsAfter)}  •  {Files(totalAfter)} in der Kette";
+
+        if (emptyAudit)
+        {
+            // nichts zu auditen → keine Statusmeldung, kein Auto-Scroll, Audit-Knopf bleibt deaktiviert
+            StatusLabel.Text = "";
+            AuditBtn.IsEnabled = false;
+            return;
+        }
 
         if (report.Error != null)
             StatusLabel.Text = "";
@@ -336,6 +348,24 @@ public partial class HomePage : ContentPage
             return;
         }
 
+        bool problems = modified > 0 || missing > 0 || badTs > 0;
+
+        // Erstbeglaubigung (Kette war leer, jetzt erster Timestamp erzeugt)
+        if (report.Chain.Count == 0 && newTimestamp?.NewChainNumber.HasValue == true)
+        {
+            SummaryBorder.BackgroundColor = Color.FromArgb("#D1FAE5");
+            SummaryIcon.Text = "✓";
+            SummaryIcon.TextColor = Color.FromArgb("#065F46");
+            SummaryHeadline.TextColor = Color.FromArgb("#065F46");
+            SummaryDetail.TextColor = Color.FromArgb("#065F46");
+            int signed = newTimestamp.NewTimestamps?.Count ?? 0;
+            SummaryHeadline.Text = $"Erste Beglaubigung erstellt — {Files(newCount)} hinzugefügt";
+            SummaryDetail.Text = signed > 1
+                ? $"Hash-Kette begonnen, neue Dateien mit {Signed(signed)} beglaubigt (Schweiz-Modus)."
+                : "Hash-Kette begonnen, neue Dateien mit einer Signatur beglaubigt.";
+            return;
+        }
+
         if (report.Chain.Count == 0)
         {
             SummaryBorder.BackgroundColor = Color.FromArgb("#FEF3C7");
@@ -352,7 +382,6 @@ public partial class HomePage : ContentPage
             return;
         }
 
-        bool problems = modified > 0 || missing > 0 || badTs > 0;
         if (problems)
         {
             SummaryBorder.BackgroundColor = Color.FromArgb("#FEE2E2");
