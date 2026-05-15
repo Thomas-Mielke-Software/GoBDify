@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GoBDify.Core;
 
@@ -32,10 +33,15 @@ public class AppSettings
     }
 }
 
+// Source-generierter Kontext: AOT- und Trim-sicher.
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(AppSettings))]
+internal partial class AppSettingsJsonContext : JsonSerializerContext
+{
+}
+
 public static class AppSettingsStore
 {
-    private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
-
     public static string DefaultPath =>
         Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -49,7 +55,7 @@ public static class AppSettingsStore
         try
         {
             var json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            return JsonSerializer.Deserialize(json, AppSettingsJsonContext.Default.AppSettings) ?? new AppSettings();
         }
         catch
         {
@@ -62,6 +68,6 @@ public static class AppSettingsStore
         path ??= DefaultPath;
         var dir = Path.GetDirectoryName(path);
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
-        File.WriteAllText(path, JsonSerializer.Serialize(settings, JsonOpts));
+        File.WriteAllText(path, JsonSerializer.Serialize(settings, AppSettingsJsonContext.Default.AppSettings));
     }
 }
