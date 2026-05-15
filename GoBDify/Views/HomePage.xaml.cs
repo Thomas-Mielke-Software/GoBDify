@@ -282,9 +282,13 @@ public partial class HomePage : ContentPage
 
         if (emptyAudit)
         {
-            // nichts zu auditen → keine Statusmeldung, kein Auto-Scroll, Audit-Knopf bleibt deaktiviert
+            // nichts zu auditen → keine Statusmeldung, Audit-Knopf bleibt deaktiviert, an den Anfang scrollen
             StatusLabel.Text = "";
             AuditBtn.IsEnabled = false;
+            Dispatcher.Dispatch(async () =>
+            {
+                try { await MainScroll.ScrollToAsync(0, 0, animated: true); } catch { }
+            });
             return;
         }
 
