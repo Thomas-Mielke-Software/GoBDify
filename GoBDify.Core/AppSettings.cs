@@ -9,6 +9,11 @@ public class AppSettings
     public List<string> RecentFolders { get; set; } = new();
     public string? LastFolder { get; set; }
 
+    public double? WindowX { get; set; }
+    public double? WindowY { get; set; }
+    public double? WindowWidth { get; set; }
+    public double? WindowHeight { get; set; }
+
     public IEnumerable<TimestampAuthority> ResolveAuthorities()
     {
         foreach (var id in SelectedTsaIds)
