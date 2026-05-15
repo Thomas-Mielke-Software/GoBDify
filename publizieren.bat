@@ -3,8 +3,8 @@ setlocal enabledelayedexpansion
 set CSPROJ=GoBDify\GoBDify.csproj
 set TFM=net8.0-windows10.0.19041.0
 
-rem Version (Display) aus csproj ziehen
-for /f "tokens=2 delims=<>" %%a in ('findstr "<Version>" %CSPROJ%') do set VERSION=%%a
+rem Version aus csproj ziehen (robust via PowerShell)
+for /f "delims=" %%a in ('powershell -NoProfile -Command "(Select-String -Path '%CSPROJ%' -Pattern '<Version>(\d+\.\d+\.\d+)' ^| Select-Object -First 1).Matches.Groups[1].Value"') do set VERSION=%%a
 if "%VERSION%"=="" set VERSION=0.0.0
 echo Version: %VERSION%
 
