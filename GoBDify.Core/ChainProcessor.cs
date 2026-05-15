@@ -10,7 +10,7 @@ public class ChainProcessor
 {
     private readonly TimestampingService _ts;
     private static readonly Regex Sha256Re = new(@"^timestamp(\d{5})\.sha256$", RegexOptions.Compiled);
-    private static readonly Regex TstSwissRe = new(@"^timestamp(\d{5})_([a-z])\.sha256\.tst$", RegexOptions.Compiled);
+    private static readonly Regex TstMultiRe = new(@"^timestamp(\d{5})_([a-z])\.sha256\.tst$", RegexOptions.Compiled);
     private static readonly Regex TstLegacyRe = new(@"^timestamp(\d{5})\.sha256\.tst$", RegexOptions.Compiled);
 
     public ChainProcessor(TimestampingService? ts = null)
@@ -19,7 +19,7 @@ public class ChainProcessor
     }
 
     public static bool IsChainArtifact(string fileName) =>
-        Sha256Re.IsMatch(fileName) || TstLegacyRe.IsMatch(fileName) || TstSwissRe.IsMatch(fileName);
+        Sha256Re.IsMatch(fileName) || TstLegacyRe.IsMatch(fileName) || TstMultiRe.IsMatch(fileName);
 
     private sealed record ChainSkeleton(
         int ChainIndex,
@@ -68,7 +68,7 @@ public class ChainProcessor
             if (legacy != null) tsts.Add((legacy, ""));
             foreach (var f in allFiles)
             {
-                var sm = TstSwissRe.Match(f.Name);
+                var sm = TstMultiRe.Match(f.Name);
                 if (sm.Success && int.Parse(sm.Groups[1].Value) == n)
                     tsts.Add((f, sm.Groups[2].Value));
             }
@@ -182,7 +182,7 @@ public class ChainProcessor
         int newIdx = audit.Chain.Count;
         string sha256Name = $"timestamp{newNumber:D5}.sha256";
         var authorities = settings.ResolveAuthorities().ToList();
-        bool swiss = settings.SwissMode;
+        bool multi = settings.ParanoiaMode;
 
         events?.Report(new NewChainStarting(newIdx, newNumber, sha256Name, audit.NewFiles));
 
@@ -193,7 +193,7 @@ public class ChainProcessor
         sb.Append($"#   - auf macOS: shasum -a 256 -c {sha256Name}\n");
         sb.Append($"#   - in Windows Powershell (nur einzelner Hash): Get-Filehash datei.pdf -Algorithm SHA256\n");
         sb.Append($"# Timestamp dieser .sha256-Datei verifizieren:\n");
-        if (swiss)
+        if (multi)
         {
             for (int i = 0; i < authorities.Count; i++)
                 sb.Append($"#   - openssl ts -verify -data {sha256Name} -in timestamp{newNumber:D5}_{(char)('a' + i)}.sha256.tst -CApath \"$(openssl version -d | cut -d '\\\"' -f 2)/certs/\"   # {authorities[i].Name}\n");
@@ -227,13 +227,13 @@ public class ChainProcessor
         var tokens = new List<TimestampTokenInfo>();
         for (int i = 0; i < results.Count; i++)
         {
-            string tstName = swiss
+            string tstName = multi
                 ? $"timestamp{newNumber:D5}_{(char)('a' + i)}.sha256.tst"
                 : $"timestamp{newNumber:D5}.sha256.tst";
             string tstPath = Path.Combine(folderPath, tstName);
             File.WriteAllBytes(tstPath, results[i].RawResponse);
             var info = new TimestampTokenInfo(
-                swiss ? ((char)('a' + i)).ToString() : "",
+                multi ? ((char)('a' + i)).ToString() : "",
                 tstName,
                 TimestampStatus.Valid,
                 results[i].Token.TokenInfo.Timestamp,

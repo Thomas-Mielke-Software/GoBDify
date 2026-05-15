@@ -143,7 +143,7 @@ internal static class CliRunner
         if (args.Length == 0 || args[0] == "show")
         {
             Console.WriteLine($"Settings: {AppSettingsStore.DefaultPath}");
-            Console.WriteLine($"  Schweiz-Modus:  {settings.SwissMode}");
+            Console.WriteLine($"  Paranoia-Modus: {settings.ParanoiaMode}");
             Console.WriteLine($"  TSAs:           {string.Join(", ", settings.SelectedTsaIds)}");
             Console.WriteLine();
             Console.WriteLine("Verfügbare TSAs:");
@@ -159,9 +159,9 @@ internal static class CliRunner
                     if (i + 1 >= args.Length) return Fail("--set-tsa erwartet kommaseparierte IDs");
                     settings.SelectedTsaIds = args[++i].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
                     break;
-                case "--swiss":
-                    if (i + 1 >= args.Length) return Fail("--swiss erwartet on|off");
-                    settings.SwissMode = args[++i].Equals("on", StringComparison.OrdinalIgnoreCase);
+                case "--paranoia":
+                    if (i + 1 >= args.Length) return Fail("--paranoia erwartet on|off");
+                    settings.ParanoiaMode = args[++i].Equals("on", StringComparison.OrdinalIgnoreCase);
                     break;
                 default:
                     return Fail($"Unbekanntes config-Argument: {args[i]}");
@@ -183,7 +183,7 @@ internal static class CliRunner
         Console.WriteLine("Verwendung:");
         Console.WriteLine("  gobdify <ordner> [--audit | --timestamp] [--config <pfad>]");
         Console.WriteLine("  gobdify config [show]");
-        Console.WriteLine("  gobdify config --set-tsa certum,digicert,freetsa --swiss on|off");
+        Console.WriteLine("  gobdify config --set-tsa certum,digicert,freetsa --paranoia on|off");
         Console.WriteLine();
         Console.WriteLine("Optionen:");
         Console.WriteLine("  -a, --audit        Nur prüfen, keine neuen Timestamps erstellen");

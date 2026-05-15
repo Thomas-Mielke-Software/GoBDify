@@ -14,7 +14,7 @@ public partial class SettingsPage : ContentPage
         InitializeComponent();
         _workspace = IPlatformApplication.Current!.Services.GetRequiredService<WorkspaceService>();
         BuildTsaList();
-        SwissSwitch.IsToggled = _workspace.Settings.SwissMode;
+        ParanoiaSwitch.IsToggled = _workspace.Settings.ParanoiaMode;
         UpdateValidation();
     }
 
@@ -52,9 +52,9 @@ public partial class SettingsPage : ContentPage
         var list = _workspace.Settings.SelectedTsaIds;
         if (value)
         {
-            if (!_workspace.Settings.SwissMode)
+            if (!_workspace.Settings.ParanoiaMode)
             {
-                // Single-Select außerhalb des Schweiz-Modus: alle anderen abwählen
+                // Single-Select außerhalb des Paranoia-Modus: alle anderen abwählen
                 list.Clear();
                 list.Add(id);
                 _suppressToggle = true;
@@ -78,11 +78,11 @@ public partial class SettingsPage : ContentPage
         UpdateValidation();
     }
 
-    private void OnSwissToggled(object sender, ToggledEventArgs e)
+    private void OnParanoiaToggled(object sender, ToggledEventArgs e)
     {
-        _workspace.Settings.SwissMode = e.Value;
+        _workspace.Settings.ParanoiaMode = e.Value;
 
-        // beim Verlassen des Schweiz-Modus auf Single-Select reduzieren
+        // beim Verlassen des Paranoia-Modus auf Single-Select reduzieren
         if (!e.Value && _workspace.Settings.SelectedTsaIds.Count > 1)
         {
             var keep = _workspace.Settings.SelectedTsaIds[0];
@@ -105,9 +105,9 @@ public partial class SettingsPage : ContentPage
     {
         var msg = _workspace.Settings.Validate();
         ValidationLabel.Text = msg ?? "";
-        if (_workspace.Settings.SwissMode)
-            TsaSectionHint.Text = $"Schweiz-Modus aktiv: genau 3 Services nötig (aktuell ausgewählt: {_workspace.Settings.SelectedTsaIds.Count}).";
+        if (_workspace.Settings.ParanoiaMode)
+            TsaSectionHint.Text = $"Paranoia-Modus aktiv: genau 3 Services nötig (aktuell ausgewählt: {_workspace.Settings.SelectedTsaIds.Count}).";
         else
-            TsaSectionHint.Text = "Wähle einen oder mehrere RFC3161-Dienste. Im Schweiz-Modus müssen genau drei ausgewählt sein.";
+            TsaSectionHint.Text = "Wähle einen RFC3161-Dienst. Im Paranoia-Modus müssen genau drei ausgewählt sein.";
     }
 }

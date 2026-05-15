@@ -12,23 +12,17 @@
 
             <Border BackgroundColor="White" Stroke="#E5E7EB" StrokeThickness="1" Padding="16">
                 <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
-                <VerticalStackLayout Spacing="6">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="Schweiz-Modus" FontAttributes="Bold" TextColor="#111827"/>
-                            <Label Text="Jeder Timestamp wird gleichzeitig bei drei voneinander unabhängigen Zertifizierungsstellen beglaubigt. Hintergrund ist Art. 9 der Schweizerischen Geschäftsbücherverordnung (GeBüV, SR 221.431), der für die elektronische Aufbewahrung geschäftsrelevanter Unterlagen die unveränderbare Speicherung verlangt; die kombinierte Beglaubigung durch drei unabhängige Dienste ist die etablierte Umsetzung dieser Anforderung."
-                                   FontSize="12" TextColor="#6B7280"/>
-                        </VerticalStackLayout>
-                        <Switch Grid.Column="1" x:Name="SwissSwitch" Toggled="OnSwissToggled" VerticalOptions="Center"/>
-                    </Grid>
-                </VerticalStackLayout>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0" Text="Paranoia-Modus" FontAttributes="Bold" TextColor="#111827" VerticalOptions="Center"/>
+                    <Switch Grid.Column="1" x:Name="ParanoiaSwitch" Toggled="OnParanoiaToggled" VerticalOptions="Center"/>
+                </Grid>
             </Border>
 
             <Border BackgroundColor="White" Stroke="#E5E7EB" StrokeThickness="1" Padding="16">
                 <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
                 <VerticalStackLayout Spacing="10">
                     <Label x:Name="TsaSectionTitle" Text="Timestamp-Services" FontAttributes="Bold" TextColor="#111827"/>
-                    <Label x:Name="TsaSectionHint" Text="Wähle einen oder mehrere RFC3161-Dienste. Im Schweiz-Modus müssen genau drei ausgewählt sein."
+                    <Label x:Name="TsaSectionHint" Text="Wähle einen RFC3161-Dienst. Im Paranoia-Modus müssen genau drei ausgewählt sein."
                            FontSize="12" TextColor="#6B7280"/>
                     <VerticalStackLayout x:Name="TsaList" Spacing="2"/>
                     <Label x:Name="ValidationLabel" Text="" FontSize="12" TextColor="#DC2626"/>

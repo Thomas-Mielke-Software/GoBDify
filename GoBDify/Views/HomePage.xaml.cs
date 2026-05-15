@@ -114,8 +114,8 @@ public partial class HomePage : ContentPage
         _cts = new CancellationTokenSource();
         SetBusy(true);
         ResetUi();
-        StatusLabel.Text = _workspace.Settings.SwissMode
-            ? "Audit läuft, Schweiz-Modus (drei Timestamp-Services) …"
+        StatusLabel.Text = _workspace.Settings.ParanoiaMode
+            ? "Audit läuft, Paranoia-Modus (drei Timestamp-Services) …"
             : "Audit läuft und neue Dateien werden getimestampt …";
         try
         {
@@ -365,7 +365,7 @@ public partial class HomePage : ContentPage
             int signed = newTimestamp.NewTimestamps?.Count ?? 0;
             SummaryHeadline.Text = $"Erste Beglaubigung erstellt — {Files(newCount)} hinzugefügt";
             SummaryDetail.Text = signed > 1
-                ? $"Hash-Kette begonnen, neue Dateien mit {Signed(signed)} beglaubigt (Schweiz-Modus)."
+                ? $"Hash-Kette begonnen, neue Dateien mit {Signed(signed)} beglaubigt (Paranoia-Modus)."
                 : "Hash-Kette begonnen, neue Dateien mit einer Signatur beglaubigt.";
             return;
         }
@@ -419,7 +419,7 @@ public partial class HomePage : ContentPage
             int signed = newTimestamp.NewTimestamps?.Count ?? 0;
             SummaryHeadline.Text = $"Neuer Timestamp erstellt — {Files(newCount)} hinzugefügt";
             SummaryDetail.Text = signed > 1
-                ? $"Bisherige {Files(totalFiles)} intakt, neue Dateien mit {Signed(signed)} beglaubigt (Schweiz-Modus)."
+                ? $"Bisherige {Files(totalFiles)} intakt, neue Dateien mit {Signed(signed)} beglaubigt (Paranoia-Modus)."
                 : $"Bisherige {Files(totalFiles)} intakt, neue Dateien mit einer Signatur beglaubigt.";
         }
         else if (newCount > 0)
