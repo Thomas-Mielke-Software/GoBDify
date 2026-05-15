@@ -1,4 +1,5 @@
 .vs
+.claude
+**/bin/
+**/obj/
 GoBDify/GoBDify.csproj.user
-GoBDify/bin
-GoBDify/obj

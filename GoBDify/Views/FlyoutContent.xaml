@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoBDify.Views.FlyoutContent">
+    <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="#1F2937">
+        <VerticalStackLayout Grid.Row="0" Padding="12,16,12,8" Spacing="2">
+            <Label Text="ARBEITSVERZEICHNISSE" FontSize="10" TextColor="#9CA3AF" CharacterSpacing="1.5"/>
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="RecentList" Padding="6,0" Spacing="2"/>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" Padding="12" Spacing="6">
+            <Button Text="📂  Ordner hinzufügen"
+                    Clicked="OnAddFolderClicked"
+                    BackgroundColor="#5d76dd" TextColor="White"
+                    HorizontalOptions="Fill" HeightRequest="42"/>
+            <Button Text="⚙  Einstellungen"
+                    Clicked="OnSettingsClicked"
+                    BackgroundColor="Transparent" TextColor="#E5E7EB"
+                    BorderColor="#374151" BorderWidth="1"
+                    HorizontalOptions="Fill" HeightRequest="40"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>

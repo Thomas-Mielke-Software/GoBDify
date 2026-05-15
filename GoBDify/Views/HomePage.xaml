@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoBDify.Views.HomePage"
+             x:Name="ThisPage"
+             Title="GoBDify"
+             BackgroundColor="#F3F4F6">
+
+    <ContentPage.Resources>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#5d76dd"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="HeightRequest" Value="38"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#4a5fb8"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#3d4f9e"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#9CA3AF"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="White"/>
+            <Setter Property="TextColor" Value="#5d76dd"/>
+            <Setter Property="BorderColor" Value="#5d76dd"/>
+            <Setter Property="BorderWidth" Value="1"/>
+            <Setter Property="HeightRequest" Value="38"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#E5E7EB"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#D1D5DB"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="#9CA3AF"/>
+                                <Setter Property="BorderColor" Value="#D1D5DB"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="0">
+
+        <!-- Header / Toolbar -->
+        <Grid Grid.Row="0" BackgroundColor="White" Padding="20,14" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <Label x:Name="FolderPathLabel" Grid.Column="0"
+                   Text="Kein Ordner ausgewählt"
+                   FontSize="18" FontAttributes="Bold" TextColor="#111827"
+                   VerticalOptions="Center"
+                   LineBreakMode="MiddleTruncation"/>
+            <Button Grid.Column="1" x:Name="AuditBtn" Text="Audit"
+                    Style="{StaticResource SecondaryButton}"
+                    Clicked="OnAuditClicked"/>
+            <Button Grid.Column="2" x:Name="TimestampBtn" Text="Neuen Timestamp erstellen"
+                    Style="{StaticResource PrimaryButton}"
+                    Clicked="OnTimestampClicked"/>
+        </Grid>
+
+        <ProgressBar Grid.Row="1" x:Name="Progress" IsVisible="False" ProgressColor="#5d76dd" HeightRequest="3"/>
+
+        <ScrollView Grid.Row="2" x:Name="MainScroll" Padding="20,10">
+            <VerticalStackLayout Spacing="10">
+                <Label x:Name="StatusLabel" Text="" FontSize="12" TextColor="#6B7280"/>
+                <VerticalStackLayout x:Name="ChainContainer" Spacing="8"/>
+                <Border x:Name="SummaryBorder" IsVisible="False" Padding="18,14" StrokeThickness="0">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="10"/></Border.StrokeShape>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                        <Label x:Name="SummaryIcon" Grid.Column="0" Text="" FontSize="36" FontAttributes="Bold" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label x:Name="SummaryHeadline" Text="" FontSize="18" FontAttributes="Bold"/>
+                            <Label x:Name="SummaryDetail" Text="" FontSize="13"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+                <Border x:Name="NewFilesBorder" IsVisible="False"
+                        Stroke="#F59E0B" StrokeThickness="1"
+                        BackgroundColor="#FFFBEB" Padding="14">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4">
+                        <Label x:Name="NewFilesHeadline" Text="Neue, noch nicht getimestampte Dateien" FontAttributes="Bold" TextColor="#92400E"/>
+                        <VerticalStackLayout x:Name="NewFilesList" Spacing="2"/>
+                    </VerticalStackLayout>
+                </Border>
+                <BoxView x:Name="ScrollAnchor" HeightRequest="1" Color="Transparent"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="3" BackgroundColor="White" Stroke="#E5E7EB" StrokeThickness="0" Padding="20,10">
+            <Label x:Name="FooterLabel" Text="" FontSize="11" TextColor="#6B7280"/>
+        </Border>
+    </Grid>
+
+</ContentPage>
