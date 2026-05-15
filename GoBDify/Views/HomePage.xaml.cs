@@ -9,6 +9,9 @@ public partial class HomePage : ContentPage
     private readonly WorkspaceService _workspace;
     private bool _running;
 
+    // live UI controllers keyed by ChainIndex from events
+    private readonly Dictionary<int, ChainCard> _cards = new();
+
     public HomePage()
     {
         InitializeComponent();
@@ -60,13 +63,14 @@ public partial class HomePage : ContentPage
         if (_running || string.IsNullOrEmpty(_workspace.CurrentFolder)) return;
         _running = true;
         SetBusy(true);
+        ResetUi();
         StatusLabel.Text = "Audit läuft …";
         try
         {
             var progress = new Progress<ProgressInfo>(p => Progress.Progress = p.Fraction);
-            var report = await _workspace.Processor.AuditAsync(_workspace.CurrentFolder!, progress);
-            RenderReport(report, newTimestamp: null);
-            StatusLabel.Text = report.Error ?? $"Audit abgeschlossen — {Timestamps(report.Chain.Count)}, {Files(report.NewFiles.Count)} neu.";
+            var events = new Progress<ChainEvent>(OnChainEvent);
+            var report = await _workspace.Processor.AuditAsync(_workspace.CurrentFolder!, progress, events);
+            FinalizeReport(report, newTimestamp: null);
         }
         catch (Exception ex)
         {
@@ -91,20 +95,16 @@ public partial class HomePage : ContentPage
         }
         _running = true;
         SetBusy(true);
+        ResetUi();
         StatusLabel.Text = _workspace.Settings.SwissMode
             ? "Audit läuft, Schweiz-Modus (drei Timestamp-Services) …"
             : "Audit läuft und neue Dateien werden getimestampt …";
         try
         {
             var progress = new Progress<ProgressInfo>(p => Progress.Progress = p.Fraction);
-            var result = await _workspace.Processor.AuditAndTimestampAsync(_workspace.CurrentFolder!, _workspace.Settings, progress);
-            RenderReport(result.Audit, result);
-            if (result.NewChainNumber.HasValue)
-                StatusLabel.Text = $"Neuer Timestamp #{result.NewChainNumber:D5} erstellt mit {result.NewTimestamps!.Count} Signatur(en).";
-            else if (result.Audit.Error != null)
-                StatusLabel.Text = result.Audit.Error;
-            else
-                StatusLabel.Text = "Keine neuen Dateien — kein neuer Timestamp nötig.";
+            var events = new Progress<ChainEvent>(OnChainEvent);
+            var result = await _workspace.Processor.AuditAndTimestampAsync(_workspace.CurrentFolder!, _workspace.Settings, progress, events);
+            FinalizeReport(result.Audit, result);
         }
         catch (Exception ex)
         {
@@ -117,12 +117,144 @@ public partial class HomePage : ContentPage
         }
     }
 
+    private void ResetUi()
+    {
+        _cards.Clear();
+        ChainContainer.Children.Clear();
+        SummaryBorder.IsVisible = false;
+        NewFilesBorder.IsVisible = false;
+        StatusLabel.Text = "";
+        FooterLabel.Text = "";
+    }
+
     private void SetBusy(bool busy)
     {
         Progress.IsVisible = busy;
         Progress.Progress = 0;
         AuditBtn.IsEnabled = !busy && _workspace.CurrentFolder != null;
         TimestampBtn.IsEnabled = !busy && _workspace.CurrentFolder != null;
+    }
+
+    private void OnChainEvent(ChainEvent ev)
+    {
+        switch (ev)
+        {
+            case ChainDiscovered cd:
+            {
+                var card = new ChainCard(cd.ChainNumber, cd.Sha256FileName, cd.FileNames, cd.Timestamps, highlight: false);
+                _cards[cd.ChainIndex] = card;
+                ChainContainer.Children.Add(card.Root);
+                ScrollTo(card.Root);
+                break;
+            }
+            case TimestampVerified tv:
+            {
+                if (_cards.TryGetValue(tv.ChainIndex, out var card))
+                    card.UpdateTimestamp(tv);
+                break;
+            }
+            case FileHashStarted fs:
+            {
+                if (_cards.TryGetValue(fs.ChainIndex, out var card))
+                {
+                    var row = card.MarkFileBusy(fs.FileName);
+                    if (row != null) ScrollTo(row);
+                }
+                break;
+            }
+            case FileHashCompleted fc:
+            {
+                if (_cards.TryGetValue(fc.ChainIndex, out var card))
+                    card.SetFileStatus(fc.FileName, fc.Status);
+                break;
+            }
+            case NewChainStarting nc:
+            {
+                var card = new ChainCard(nc.ChainNumber, nc.Sha256FileName, nc.FileNames,
+                    Array.Empty<(string, string)>(), highlight: true);
+                _cards[nc.ChainIndex] = card;
+                ChainContainer.Children.Add(card.Root);
+                ScrollTo(card.Root);
+                // hide the "Neue Dateien"-Box since they are now in the fresh card
+                NewFilesBorder.IsVisible = false;
+                break;
+            }
+            case NewFileHashStarted nfs:
+            {
+                if (_cards.TryGetValue(nfs.ChainIndex, out var card))
+                {
+                    var row = card.MarkFileBusy(nfs.FileName);
+                    if (row != null) ScrollTo(row);
+                }
+                break;
+            }
+            case NewFileHashCompleted nfc:
+            {
+                if (_cards.TryGetValue(nfc.ChainIndex, out var card))
+                    card.SetFileStatus(nfc.FileName, FileVerificationStatus.New);
+                break;
+            }
+            case NewTimestampRequested ntr:
+            {
+                if (_cards.TryGetValue(ntr.ChainIndex, out var card))
+                    card.AddTimestampBadge(ntr.TstFileName, ntr.Timestamp, ntr.TsaName);
+                break;
+            }
+            case AuditCompleted ac:
+            {
+                // handled in FinalizeReport, but we can already render the "new files" box if no NewChainStarting follows
+                break;
+            }
+        }
+    }
+
+    private void FinalizeReport(AuditReport report, ChainResult? newTimestamp)
+    {
+        RenderSummary(report, newTimestamp);
+
+        if (newTimestamp == null && report.NewFiles.Count > 0)
+        {
+            NewFilesBorder.IsVisible = true;
+            NewFilesHeadline.Text = report.NewFiles.Count == 1
+                ? "Neue, noch nicht getimestampte Datei"
+                : "Neue, noch nicht getimestampte Dateien";
+            NewFilesList.Children.Clear();
+            foreach (var f in report.NewFiles)
+                NewFilesList.Children.Add(new Label { Text = "• " + f, FontSize = 13, TextColor = Color.FromArgb("#92400E") });
+        }
+
+        FooterLabel.Text = report.Chain.Count == 0
+            ? "Noch keine Hash-Kette in diesem Ordner."
+            : $"{Timestamps(report.Chain.Count)}  •  {Files(report.Chain.Sum(c => c.Files.Count))} in der Kette";
+
+        if (report.Error != null)
+            StatusLabel.Text = "";
+        else if (newTimestamp?.NewChainNumber.HasValue == true)
+            StatusLabel.Text = $"Neuer Timestamp #{newTimestamp.NewChainNumber:D5} erstellt mit {newTimestamp.NewTimestamps!.Count} Signatur(en).";
+        else
+            StatusLabel.Text = $"Audit abgeschlossen — {Timestamps(report.Chain.Count)}, {Files(report.NewFiles.Count)} neu.";
+
+        ScrollToEndSafe();
+    }
+
+    private void ScrollTo(View target)
+    {
+        Dispatcher.Dispatch(async () =>
+        {
+            try { await MainScroll.ScrollToAsync(target, ScrollToPosition.MakeVisible, animated: true); } catch { }
+        });
+    }
+
+    private void ScrollToEndSafe()
+    {
+        Dispatcher.Dispatch(async () =>
+        {
+            try { await MainScroll.ScrollToAsync(ScrollAnchor, ScrollToPosition.End, animated: true); } catch { }
+        });
+        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(250), async () =>
+        {
+            try { await MainScroll.ScrollToAsync(ScrollAnchor, ScrollToPosition.End, animated: true); } catch { }
+        });
     }
 
     private static string Files(int n) => n == 1 ? "1 Datei" : $"{n} Dateien";
@@ -137,7 +269,6 @@ public partial class HomePage : ContentPage
         int totalFiles = report.Chain.Sum(c => c.Files.Count);
         int newCount = report.NewFiles.Count;
 
-        // chain entries that contain any modification/missing/bad-ts
         var affectedChains = report.Chain.Where(c =>
             c.Files.Any(f => f.Status == FileVerificationStatus.Modified || f.Status == FileVerificationStatus.Missing)
             || c.Timestamps.Any(t => t.Status != TimestampStatus.Valid)).ToList();
@@ -232,147 +363,205 @@ public partial class HomePage : ContentPage
             SummaryDetail.Text = $"{Timestamps(report.Chain.Count)} in der Kette, alle Signaturen gültig.";
         }
     }
+}
 
-    private void RenderReport(AuditReport report, ChainResult? newTimestamp)
+/// <summary>Live UI-Controller für eine .sha256-Karte mit allen Datei-Zeilen.</summary>
+internal sealed class ChainCard
+{
+    public Border Root { get; }
+    private readonly HorizontalStackLayout _badges;
+    private readonly Dictionary<string, ChainFileRow> _rows = new();
+    private readonly bool _highlight;
+
+    public ChainCard(int number, string sha256Name,
+                     IReadOnlyList<string> fileNames,
+                     IReadOnlyList<(string Suffix, string TstFileName)> timestamps,
+                     bool highlight)
     {
-        RenderSummary(report, newTimestamp);
-        ChainContainer.Children.Clear();
-        foreach (var entry in report.Chain)
-            ChainContainer.Children.Add(BuildChainCard(entry, highlight: false));
+        _highlight = highlight;
+        string accent = highlight ? "#10B981" : "#9CA3AF"; // start neutral, finalize in summary
 
-        if (newTimestamp?.NewChainNumber.HasValue == true)
+        var header = new Grid
         {
-            // build a synthetic entry visualization for the just-created timestamp
-            var freshEntry = new ChainEntry(
-                newTimestamp.NewChainNumber.Value,
-                $"timestamp{newTimestamp.NewChainNumber:D5}.sha256",
-                report.NewFiles.Select(f => new FileEntry(f, "", null, FileVerificationStatus.New)).ToList(),
-                newTimestamp.NewTimestamps ?? new List<TimestampTokenInfo>());
-            ChainContainer.Children.Add(BuildChainCard(freshEntry, highlight: true));
-        }
-
-        if (newTimestamp == null && report.NewFiles.Count > 0)
-        {
-            NewFilesBorder.IsVisible = true;
-            NewFilesHeadline.Text = report.NewFiles.Count == 1
-                ? "Neue, noch nicht getimestampte Datei"
-                : "Neue, noch nicht getimestampte Dateien";
-            NewFilesList.Children.Clear();
-            foreach (var f in report.NewFiles)
-                NewFilesList.Children.Add(new Label { Text = "• " + f, FontSize = 13, TextColor = Color.FromArgb("#92400E") });
-        }
-        else
-        {
-            NewFilesBorder.IsVisible = false;
-        }
-
-        FooterLabel.Text = report.Chain.Count == 0
-            ? "Noch keine Hash-Kette in diesem Ordner."
-            : $"{Timestamps(report.Chain.Count)}  •  {Files(report.Chain.Sum(c => c.Files.Count))} in der Kette";
-
-        ScrollToEndSafe();
-    }
-
-    private void ScrollToEndSafe()
-    {
-        // einmal sofort (für nachfolgende Renderings nach dem ersten Layout)
-        Dispatcher.Dispatch(async () =>
-        {
-            try { await MainScroll.ScrollToAsync(ScrollAnchor, ScrollToPosition.End, animated: true); } catch { }
-        });
-        // und nochmal verzögert, damit es auch direkt beim ersten Anzeigen der Seite klappt,
-        // wenn ContentSize beim Dispatch noch 0 ist
-        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(250), async () =>
-        {
-            try { await MainScroll.ScrollToAsync(ScrollAnchor, ScrollToPosition.End, animated: true); } catch { }
-        });
-    }
-
-    private View BuildChainCard(ChainEntry entry, bool highlight)
-    {
-        bool allOk = entry.Files.All(f => f.Status is FileVerificationStatus.Ok or FileVerificationStatus.New)
-                     && entry.Timestamps.All(t => t.Status == TimestampStatus.Valid);
-        var accent = highlight ? "#10B981" : (allOk ? "#5d76dd" : "#DC2626");
-
-        var header = new Grid { ColumnDefinitions = new ColumnDefinitionCollection(new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto)), ColumnSpacing = 10 };
-        header.Add(new Label { Text = allOk ? "✓" : "!", FontSize = 18, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb(accent), VerticalOptions = LayoutOptions.Center }, 0, 0);
-
+            ColumnDefinitions = new ColumnDefinitionCollection(
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto)),
+            ColumnSpacing = 10
+        };
         var titleStack = new VerticalStackLayout { Spacing = 1 };
-        titleStack.Add(new Label { Text = entry.Sha256FileName, FontSize = 14, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#111827") });
-        var firstTs = entry.Timestamps.FirstOrDefault();
-        if (firstTs?.Timestamp != null)
-            titleStack.Add(new Label { Text = firstTs.Timestamp.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm"), FontSize = 11, TextColor = Color.FromArgb("#6B7280") });
+        titleStack.Add(new Label { Text = sha256Name, FontSize = 14, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#111827") });
         header.Add(titleStack, 1, 0);
 
-        // TSA badges
-        var badges = new HorizontalStackLayout { Spacing = 4, VerticalOptions = LayoutOptions.Center };
-        foreach (var t in entry.Timestamps)
+        _badges = new HorizontalStackLayout { Spacing = 4, VerticalOptions = LayoutOptions.Center };
+        // pre-create placeholder badges for the .tst files we found (state will be updated)
+        foreach (var (suffix, _) in timestamps)
         {
-            var bg = t.Status == TimestampStatus.Valid ? "#DBEAFE" : "#FEE2E2";
-            var fg = t.Status == TimestampStatus.Valid ? "#1E40AF" : "#991B1B";
-            var label = !string.IsNullOrEmpty(t.TsaFileSuffix) ? t.TsaFileSuffix.ToUpper() : "TS";
-            badges.Add(new Border
+            var badge = new Border
             {
-                BackgroundColor = Color.FromArgb(bg),
+                BackgroundColor = Color.FromArgb("#E5E7EB"),
                 StrokeThickness = 0,
                 Padding = new Thickness(6, 2),
                 StrokeShape = new RoundRectangle { CornerRadius = 4 },
-                Content = new Label { Text = label, FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb(fg) }
-            });
+                Content = new Label
+                {
+                    Text = string.IsNullOrEmpty(suffix) ? "TS" : suffix.ToUpper(),
+                    FontSize = 10, FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("#374151")
+                }
+            };
+            _badges.Add(badge);
         }
-        header.Add(badges, 2, 0);
+        header.Add(_badges, 2, 0);
 
         var fileList = new VerticalStackLayout { Spacing = 3, Padding = new Thickness(28, 6, 0, 0) };
-        foreach (var f in entry.Files)
+        foreach (var f in fileNames)
         {
-            string icon = f.Status switch
-            {
-                FileVerificationStatus.Ok => "✓",
-                FileVerificationStatus.New => "+",
-                FileVerificationStatus.Modified => "⚠",
-                FileVerificationStatus.Missing => "✗",
-                _ => "•"
-            };
-            string color = f.Status switch
-            {
-                FileVerificationStatus.Ok => "#059669",
-                FileVerificationStatus.New => "#10B981",
-                FileVerificationStatus.Modified => "#DC2626",
-                FileVerificationStatus.Missing => "#DC2626",
-                _ => "#6B7280"
-            };
-            var row = new HorizontalStackLayout { Spacing = 8 };
-            row.Add(new Label { Text = icon, FontSize = 13, TextColor = Color.FromArgb(color), WidthRequest = 14 });
-            row.Add(new Label { Text = f.FileName, FontSize = 13, TextColor = Color.FromArgb("#1F2937") });
-            if (f.Status == FileVerificationStatus.Modified)
-                row.Add(new Label { Text = "(verändert)", FontSize = 11, TextColor = Color.FromArgb("#DC2626") });
-            else if (f.Status == FileVerificationStatus.Missing)
-                row.Add(new Label { Text = "(fehlt)", FontSize = 11, TextColor = Color.FromArgb("#DC2626") });
-            fileList.Add(row);
-        }
-
-        // detailed timestamp info
-        if (entry.Timestamps.Count > 1 || entry.Timestamps.Any(t => t.Status != TimestampStatus.Valid))
-        {
-            foreach (var t in entry.Timestamps)
-            {
-                var line = $"  {(string.IsNullOrEmpty(t.TsaFileSuffix) ? "" : t.TsaFileSuffix.ToUpper() + ": ")}{(t.IssuerName ?? t.TstFileName)} — {(t.Status == TimestampStatus.Valid ? "gültig" : (t.Error ?? "ungültig"))}";
-                fileList.Add(new Label { Text = line, FontSize = 10, TextColor = Color.FromArgb("#6B7280") });
-            }
+            var row = new ChainFileRow(f, highlight);
+            _rows[f] = row;
+            fileList.Add(row.Root);
         }
 
         var inner = new VerticalStackLayout { Spacing = 0 };
         inner.Add(header);
         inner.Add(fileList);
 
-        return new Border
+        Root = new Border
         {
             BackgroundColor = Colors.White,
-            Stroke = Color.FromArgb(highlight ? accent : "#E5E7EB"),
+            Stroke = Color.FromArgb(highlight ? "#10B981" : "#E5E7EB"),
             StrokeThickness = highlight ? 2 : 1,
             Padding = new Thickness(14, 12),
             StrokeShape = new RoundRectangle { CornerRadius = 8 },
             Content = inner
         };
+    }
+
+    public View? MarkFileBusy(string fileName)
+    {
+        if (_rows.TryGetValue(fileName, out var row))
+        {
+            row.SetBusy();
+            return row.Root;
+        }
+        return null;
+    }
+
+    public void SetFileStatus(string fileName, FileVerificationStatus status)
+    {
+        if (_rows.TryGetValue(fileName, out var row))
+            row.SetStatus(status);
+    }
+
+    public void UpdateTimestamp(TimestampVerified tv)
+    {
+        // find matching badge by suffix; replace its colors
+        int idx = -1;
+        for (int i = 0; i < _badges.Children.Count; i++)
+        {
+            if (_badges.Children[i] is Border b && b.Content is Label l)
+            {
+                var key = string.IsNullOrEmpty(tv.TsaSuffix) ? "TS" : tv.TsaSuffix.ToUpper();
+                if (l.Text == key) { idx = i; break; }
+            }
+        }
+        if (idx < 0) return;
+        var (bg, fg) = tv.Status == TimestampStatus.Valid ? ("#DBEAFE", "#1E40AF") : ("#FEE2E2", "#991B1B");
+        if (_badges.Children[idx] is Border target)
+        {
+            target.BackgroundColor = Color.FromArgb(bg);
+            if (target.Content is Label tl) tl.TextColor = Color.FromArgb(fg);
+        }
+    }
+
+    public void AddTimestampBadge(string tstFileName, DateTimeOffset? when, string issuer)
+    {
+        // for new (just-created) timestamps without prediscovered suffix
+        string label = "TS";
+        // extract _x suffix if present
+        var m = System.Text.RegularExpressions.Regex.Match(tstFileName, @"_(\w)\.sha256\.tst$");
+        if (m.Success) label = m.Groups[1].Value.ToUpper();
+        var badge = new Border
+        {
+            BackgroundColor = Color.FromArgb("#D1FAE5"),
+            StrokeThickness = 0,
+            Padding = new Thickness(6, 2),
+            StrokeShape = new RoundRectangle { CornerRadius = 4 },
+            Content = new Label { Text = label, FontSize = 10, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#065F46") }
+        };
+        _badges.Add(badge);
+    }
+}
+
+internal sealed class ChainFileRow
+{
+    public HorizontalStackLayout Root { get; }
+    private readonly Grid _iconSlot;
+    private readonly Label _statusSuffix;
+    private readonly bool _highlight;
+
+    public ChainFileRow(string fileName, bool highlight)
+    {
+        _highlight = highlight;
+        Root = new HorizontalStackLayout { Spacing = 8 };
+        _iconSlot = new Grid { WidthRequest = 16, HeightRequest = 16, VerticalOptions = LayoutOptions.Center };
+        Root.Add(_iconSlot);
+        Root.Add(new Label { Text = fileName, FontSize = 13, TextColor = Color.FromArgb("#1F2937"), VerticalOptions = LayoutOptions.Center });
+        _statusSuffix = new Label { Text = "", FontSize = 11, VerticalOptions = LayoutOptions.Center };
+        Root.Add(_statusSuffix);
+        // initial: small gray dot ("pending")
+        SetPending();
+    }
+
+    public void SetPending()
+    {
+        _iconSlot.Children.Clear();
+        _iconSlot.Children.Add(new Label
+        {
+            Text = "•",
+            FontSize = 14,
+            TextColor = Color.FromArgb("#D1D5DB"),
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center
+        });
+        _statusSuffix.Text = "";
+    }
+
+    public void SetBusy()
+    {
+        _iconSlot.Children.Clear();
+        _iconSlot.Children.Add(new ActivityIndicator
+        {
+            IsRunning = true,
+            Color = Color.FromArgb("#5d76dd"),
+            WidthRequest = 14,
+            HeightRequest = 14
+        });
+        _statusSuffix.Text = "wird gehasht …";
+        _statusSuffix.TextColor = Color.FromArgb("#6B7280");
+    }
+
+    public void SetStatus(FileVerificationStatus status)
+    {
+        _iconSlot.Children.Clear();
+        (string icon, string color, string suffix) = status switch
+        {
+            FileVerificationStatus.Ok       => ("✓", "#059669", ""),
+            FileVerificationStatus.New      => ("+", "#10B981", "neu"),
+            FileVerificationStatus.Modified => ("⚠", "#DC2626", "verändert"),
+            FileVerificationStatus.Missing  => ("✗", "#DC2626", "fehlt"),
+            _                               => ("•", "#6B7280", "")
+        };
+        _iconSlot.Children.Add(new Label
+        {
+            Text = icon,
+            FontSize = 14,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb(color),
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center
+        });
+        _statusSuffix.Text = string.IsNullOrEmpty(suffix) ? "" : $"({suffix})";
+        _statusSuffix.TextColor = Color.FromArgb(color);
     }
 }
