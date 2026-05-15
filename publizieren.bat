@@ -5,7 +5,7 @@ set CLI_CSPROJ=GoBDify.Cli\GoBDify.Cli.csproj
 set TFM=net8.0-windows10.0.19041.0
 set CLI_FLAGS=-c Release --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishTrimmed=true
 
-rem Version aus dem CLI-csproj ziehen (CLI und GUI halten beide <Version> synchron)
+rem Version aus dem CLI-csproj ziehen
 set VERFILE=%TEMP%\gobdify_version.txt
 powershell -NoProfile -Command "(Select-String -Path '%CLI_CSPROJ%' -Pattern '<Version>(\d+\.\d+\.\d+)' | Select-Object -First 1).Matches.Groups[1].Value" > "%VERFILE%"
 set /p VERSION=<"%VERFILE%"
@@ -43,10 +43,10 @@ set RID=%~1
 set ARCH=%~2
 echo === GUI %RID% ===
 dotnet publish %GUI_CSPROJ% -f %TFM% -c Release -p:RuntimeIdentifierOverride=%RID% || exit /b 1
-set ZIP=dist\gobdify-gui-%VERSION%-windows-%ARCH%.zip
-if exist "%ZIP%" del "%ZIP%"
-powershell -NoProfile -Command "$d = Get-ChildItem -Path 'GoBDify' -Recurse -Directory -Filter '*_Test' | Where-Object { $_.FullName -match '%RID%' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $d) { Write-Error 'MSIX-Verzeichnis nicht gefunden'; exit 1 }; Compress-Archive -Path ($d.FullName + '\*') -DestinationPath '%ZIP%'" || exit /b 1
-echo   -^> %ZIP%
+set TARGET=dist\gobdify-gui-%VERSION%-windows-%ARCH%.msix
+if exist "%TARGET%" del "%TARGET%"
+powershell -NoProfile -Command "$src = Get-ChildItem -Path 'GoBDify' -Recurse -Filter '*.msix' | Where-Object { $_.FullName -match '%RID%' -and $_.FullName -notmatch 'Dependencies' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $src) { Write-Error 'MSIX-Datei nicht gefunden'; exit 1 }; Copy-Item $src.FullName '%TARGET%'" || exit /b 1
+echo   -^> %TARGET%
 exit /b 0
 
 :buildCli
