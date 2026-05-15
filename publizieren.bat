@@ -4,7 +4,7 @@ set CSPROJ=GoBDify\GoBDify.csproj
 set TFM=net8.0-windows10.0.19041.0
 
 rem Version (Display) aus csproj ziehen
-for /f "tokens=2 delims=<>" %%a in ('findstr "<ApplicationDisplayVersion>" %CSPROJ%') do set VERSION=%%a
+for /f "tokens=2 delims=<>" %%a in ('findstr "<Version>" %CSPROJ%') do set VERSION=%%a
 if "%VERSION%"=="" set VERSION=0.0.0
 echo Version: %VERSION%
 
