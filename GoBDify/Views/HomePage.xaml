@@ -73,16 +73,21 @@
     <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="0">
 
         <!-- Header / Toolbar -->
-        <Grid Grid.Row="0" BackgroundColor="White" Padding="20,14" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+        <Grid Grid.Row="0" BackgroundColor="White" Padding="20,14" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
             <Label x:Name="FolderPathLabel" Grid.Column="0"
                    Text="Kein Ordner ausgewählt"
                    FontSize="18" FontAttributes="Bold" TextColor="#111827"
                    VerticalOptions="Center"
                    LineBreakMode="MiddleTruncation"/>
-            <Button Grid.Column="1" x:Name="AuditBtn" Text="Audit"
+            <Button Grid.Column="1" x:Name="CancelBtn" Text="Abbrechen"
+                    IsVisible="False"
+                    BackgroundColor="White" TextColor="#DC2626" BorderColor="#DC2626" BorderWidth="1"
+                    HeightRequest="38" Padding="14,0" CornerRadius="6"
+                    Clicked="OnCancelClicked"/>
+            <Button Grid.Column="2" x:Name="AuditBtn" Text="Audit"
                     Style="{StaticResource SecondaryButton}"
                     Clicked="OnAuditClicked"/>
-            <Button Grid.Column="2" x:Name="TimestampBtn" Text="Neuen Timestamp erstellen"
+            <Button Grid.Column="3" x:Name="TimestampBtn" Text="Neuen Timestamp erstellen"
                     Style="{StaticResource PrimaryButton}"
                     Clicked="OnTimestampClicked"/>
         </Grid>

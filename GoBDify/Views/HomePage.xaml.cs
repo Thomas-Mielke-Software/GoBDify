@@ -8,9 +8,13 @@ public partial class HomePage : ContentPage
 {
     private readonly WorkspaceService _workspace;
     private bool _running;
+    private CancellationTokenSource? _cts;
 
     // live UI controllers keyed by ChainIndex from events
     private readonly Dictionary<int, ChainCard> _cards = new();
+
+    // last started but not yet completed file (chainIndex, fileName) — Ziel der Abbruch-Markierung
+    private (int chainIndex, string fileName)? _activeFile;
 
     public HomePage()
     {
@@ -57,11 +61,18 @@ public partial class HomePage : ContentPage
 
     private async void OnAuditClicked(object sender, EventArgs e) => await RunAuditAsync();
     private async void OnTimestampClicked(object sender, EventArgs e) => await RunTimestampAsync();
+    private void OnCancelClicked(object sender, EventArgs e)
+    {
+        _cts?.Cancel();
+        CancelBtn.IsEnabled = false;
+        CancelBtn.Text = "Wird abgebrochen …";
+    }
 
     private async Task RunAuditAsync()
     {
         if (_running || string.IsNullOrEmpty(_workspace.CurrentFolder)) return;
         _running = true;
+        _cts = new CancellationTokenSource();
         SetBusy(true);
         ResetUi();
         StatusLabel.Text = "Audit läuft …";
@@ -69,8 +80,12 @@ public partial class HomePage : ContentPage
         {
             var progress = new Progress<ProgressInfo>(p => Progress.Progress = p.Fraction);
             var events = new Progress<ChainEvent>(OnChainEvent);
-            var report = await _workspace.Processor.AuditAsync(_workspace.CurrentFolder!, progress, events);
+            var report = await _workspace.Processor.AuditAsync(_workspace.CurrentFolder!, progress, events, _cts.Token);
             FinalizeReport(report, newTimestamp: null);
+        }
+        catch (OperationCanceledException)
+        {
+            HandleCancelled();
         }
         catch (Exception ex)
         {
@@ -78,6 +93,8 @@ public partial class HomePage : ContentPage
         }
         finally
         {
+            _cts?.Dispose();
+            _cts = null;
             _running = false;
             SetBusy(false);
         }
@@ -94,6 +111,7 @@ public partial class HomePage : ContentPage
             return;
         }
         _running = true;
+        _cts = new CancellationTokenSource();
         SetBusy(true);
         ResetUi();
         StatusLabel.Text = _workspace.Settings.SwissMode
@@ -103,8 +121,12 @@ public partial class HomePage : ContentPage
         {
             var progress = new Progress<ProgressInfo>(p => Progress.Progress = p.Fraction);
             var events = new Progress<ChainEvent>(OnChainEvent);
-            var result = await _workspace.Processor.AuditAndTimestampAsync(_workspace.CurrentFolder!, _workspace.Settings, progress, events);
+            var result = await _workspace.Processor.AuditAndTimestampAsync(_workspace.CurrentFolder!, _workspace.Settings, progress, events, _cts.Token);
             FinalizeReport(result.Audit, result);
+        }
+        catch (OperationCanceledException)
+        {
+            HandleCancelled();
         }
         catch (Exception ex)
         {
@@ -112,18 +134,36 @@ public partial class HomePage : ContentPage
         }
         finally
         {
+            _cts?.Dispose();
+            _cts = null;
             _running = false;
             SetBusy(false);
         }
     }
 
+    private void HandleCancelled()
+    {
+        // markiere die aktuell im Hashing befindliche Datei
+        if (_activeFile is { } act && _cards.TryGetValue(act.chainIndex, out var card))
+            card.MarkFileCancelled(act.fileName);
+        _activeFile = null;
+
+        StatusLabel.Text = "Vom Benutzer abgebrochen.";
+        StatusLabel.TextColor = Color.FromArgb("#DC2626");
+        SummaryBorder.IsVisible = false;
+        NewFilesBorder.IsVisible = false;
+        FooterLabel.Text = "";
+    }
+
     private void ResetUi()
     {
         _cards.Clear();
+        _activeFile = null;
         ChainContainer.Children.Clear();
         SummaryBorder.IsVisible = false;
         NewFilesBorder.IsVisible = false;
         StatusLabel.Text = "";
+        StatusLabel.TextColor = Color.FromArgb("#6B7280");
         FooterLabel.Text = "";
     }
 
@@ -133,6 +173,11 @@ public partial class HomePage : ContentPage
         Progress.Progress = 0;
         AuditBtn.IsEnabled = !busy && _workspace.CurrentFolder != null;
         TimestampBtn.IsEnabled = !busy && _workspace.CurrentFolder != null;
+        CancelBtn.IsVisible = busy;
+        CancelBtn.IsEnabled = busy;
+        CancelBtn.Text = "Abbrechen";
+        if (!busy)
+            StatusLabel.TextColor = Color.FromArgb("#6B7280");
     }
 
     private void OnChainEvent(ChainEvent ev)
@@ -155,6 +200,7 @@ public partial class HomePage : ContentPage
             }
             case FileHashStarted fs:
             {
+                _activeFile = (fs.ChainIndex, fs.FileName);
                 if (_cards.TryGetValue(fs.ChainIndex, out var card))
                 {
                     var row = card.MarkFileBusy(fs.FileName);
@@ -164,6 +210,7 @@ public partial class HomePage : ContentPage
             }
             case FileHashCompleted fc:
             {
+                _activeFile = null;
                 if (_cards.TryGetValue(fc.ChainIndex, out var card))
                     card.SetFileStatus(fc.FileName, fc.Status);
                 break;
@@ -181,6 +228,7 @@ public partial class HomePage : ContentPage
             }
             case NewFileHashStarted nfs:
             {
+                _activeFile = (nfs.ChainIndex, nfs.FileName);
                 if (_cards.TryGetValue(nfs.ChainIndex, out var card))
                 {
                     var row = card.MarkFileBusy(nfs.FileName);
@@ -190,6 +238,7 @@ public partial class HomePage : ContentPage
             }
             case NewFileHashCompleted nfc:
             {
+                _activeFile = null;
                 if (_cards.TryGetValue(nfc.ChainIndex, out var card))
                     card.SetFileStatus(nfc.FileName, FileVerificationStatus.New);
                 break;
@@ -453,6 +502,12 @@ internal sealed class ChainCard
             row.SetStatus(status);
     }
 
+    public void MarkFileCancelled(string fileName)
+    {
+        if (_rows.TryGetValue(fileName, out var row))
+            row.SetCancelled();
+    }
+
     public void UpdateTimestamp(TimestampVerified tv)
     {
         // find matching badge by suffix; replace its colors
@@ -539,6 +594,22 @@ internal sealed class ChainFileRow
         });
         _statusSuffix.Text = "wird gehasht …";
         _statusSuffix.TextColor = Color.FromArgb("#6B7280");
+    }
+
+    public void SetCancelled()
+    {
+        _iconSlot.Children.Clear();
+        _iconSlot.Children.Add(new Label
+        {
+            Text = "✗",
+            FontSize = 14,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb("#DC2626"),
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center
+        });
+        _statusSuffix.Text = "durch Benutzer abgebrochen";
+        _statusSuffix.TextColor = Color.FromArgb("#DC2626");
     }
 
     public void SetStatus(FileVerificationStatus status)
