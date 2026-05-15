@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace GoBDify.Core;
 
@@ -9,16 +8,6 @@ public class AppSettings
     public bool ParanoiaMode { get; set; } = false;
     public List<string> RecentFolders { get; set; } = new();
     public string? LastFolder { get; set; }
-
-    // Migration: alte settings.json hieß diese Option SwissMode.
-    [JsonPropertyName("SwissMode")]
-    public bool? SwissModeLegacy { get; set; }
-
-    public void NormalizeAfterLoad()
-    {
-        if (SwissModeLegacy == true) ParanoiaMode = true;
-        SwissModeLegacy = null;
-    }
 
     public IEnumerable<TimestampAuthority> ResolveAuthorities()
     {
@@ -40,11 +29,7 @@ public class AppSettings
 
 public static class AppSettingsStore
 {
-    private static readonly JsonSerializerOptions JsonOpts = new()
-    {
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-    };
+    private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
 
     public static string DefaultPath =>
         Path.Combine(
@@ -59,9 +44,7 @@ public static class AppSettingsStore
         try
         {
             var json = File.ReadAllText(path);
-            var settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
-            settings.NormalizeAfterLoad();
-            return settings;
+            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
         }
         catch
         {
