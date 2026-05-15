@@ -45,7 +45,7 @@ echo === GUI %RID% ===
 dotnet publish %GUI_CSPROJ% -f %TFM% -c Release -p:RuntimeIdentifierOverride=%RID% || exit /b 1
 set ZIP=dist\gobdify-gui-%VERSION%-windows-%ARCH%.zip
 if exist "%ZIP%" del "%ZIP%"
-powershell -NoProfile -Command "$d = Get-ChildItem -Path 'GoBDify' -Recurse -Directory -Filter '*_Test' ^| Where-Object { $_.FullName -match '%RID%' } ^| Sort-Object LastWriteTime -Descending ^| Select-Object -First 1; if (-not $d) { Write-Error 'MSIX-Verzeichnis nicht gefunden'; exit 1 }; Compress-Archive -Path ($d.FullName + '\*') -DestinationPath '%ZIP%'" || exit /b 1
+powershell -NoProfile -Command "$d = Get-ChildItem -Path 'GoBDify' -Recurse -Directory -Filter '*_Test' | Where-Object { $_.FullName -match '%RID%' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $d) { Write-Error 'MSIX-Verzeichnis nicht gefunden'; exit 1 }; Compress-Archive -Path ($d.FullName + '\*') -DestinationPath '%ZIP%'" || exit /b 1
 echo   -^> %ZIP%
 exit /b 0
 
