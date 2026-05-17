@@ -13,6 +13,11 @@ public class WorkspaceService
 
     public event EventHandler<string?>? CurrentFolderChanged;
 
+    /// <summary>
+    /// Wechselt das Arbeitsverzeichnis. Neue Pfade werden am Anfang der
+    /// Recent-Liste eingefügt; bereits vorhandene Pfade behalten ihre Position
+    /// (bloßes Wechseln darf die Listen-Sortierung nicht umwerfen).
+    /// </summary>
     public string? CurrentFolder
     {
         get => Settings.LastFolder;
@@ -20,14 +25,39 @@ public class WorkspaceService
         {
             if (Settings.LastFolder == value) return;
             Settings.LastFolder = value;
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value) && !Settings.RecentFolders.Contains(value))
             {
-                Settings.RecentFolders.Remove(value);
                 Settings.RecentFolders.Insert(0, value);
                 SyncRecent();
             }
             SaveSettings();
             CurrentFolderChanged?.Invoke(this, value);
+        }
+    }
+
+    /// <summary>
+    /// Wie der CurrentFolder-Setter, aber zieht den Pfad explizit an die
+    /// Spitze der Recent-Liste — für Aktionen mit Subtext "ab jetzt der
+    /// Hauptordner" (Picker-Pick, Zugriff freigeben).
+    /// </summary>
+    public void SetCurrentFolderToTop(string path)
+    {
+        Settings.RecentFolders.Remove(path);
+        Settings.RecentFolders.Insert(0, path);
+        if (Settings.LastFolder == path)
+        {
+            // CurrentFolder-Setter würde wegen Gleichheit nichts tun;
+            // wir müssen Sync+Save selbst auslösen und das Event feuern.
+            SyncRecent();
+            SaveSettings();
+            CurrentFolderChanged?.Invoke(this, path);
+        }
+        else
+        {
+            // ändert LastFolder; Setter macht Sync+Save+Event.
+            // (Wir haben RecentFolders schon umsortiert; der Setter sieht
+            // den Pfad in der Liste und rührt sie nicht mehr an.)
+            CurrentFolder = path;
         }
     }
 
@@ -59,7 +89,7 @@ public class WorkspaceService
         var result = await FolderPicker.PickAsync(initialPath ?? string.Empty, default);
         if (result?.Folder?.Path == null) return false;
         await WindowsFolderAccess.RegisterAsync(result.Folder.Path);
-        CurrentFolder = result.Folder.Path;
+        SetCurrentFolderToTop(result.Folder.Path);
         return true;
     }
 
