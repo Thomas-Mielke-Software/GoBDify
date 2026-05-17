@@ -87,6 +87,10 @@ public partial class HomePage : ContentPage
         {
             HandleCancelled();
         }
+        catch (UnauthorizedAccessException)
+        {
+            HandlePermissionDenied();
+        }
         catch (Exception ex)
         {
             StatusLabel.Text = $"Fehler: {ex.Message}";
@@ -128,6 +132,10 @@ public partial class HomePage : ContentPage
         {
             HandleCancelled();
         }
+        catch (UnauthorizedAccessException)
+        {
+            HandlePermissionDenied();
+        }
         catch (Exception ex)
         {
             StatusLabel.Text = $"Fehler: {ex.Message}";
@@ -138,6 +146,44 @@ public partial class HomePage : ContentPage
             _cts = null;
             _running = false;
             SetBusy(false);
+        }
+    }
+
+    private void HandlePermissionDenied()
+    {
+        _activeFile = null;
+        PermissionDetail.Text =
+            "Die App läuft in einer Sandbox (Microsoft Store oder MSIX) und hat noch keinen " +
+            "registrierten Zugriff auf diesen Ordner. Ursache nach Neuinstallation oder " +
+            "Settings-Backup. Klicke 'Zugriff freigeben' und bestätige den Ordner im Dialog — " +
+            "das erteilt Windows die Berechtigung dauerhaft.";
+        PermissionBorder.IsVisible = true;
+        SummaryBorder.IsVisible = false;
+        NewFilesBorder.IsVisible = false;
+        StatusLabel.Text = "";
+
+        Dispatcher.Dispatch(async () =>
+        {
+            try { await MainScroll.ScrollToAsync(0, 0, animated: true); } catch { }
+        });
+    }
+
+    private async void OnGrantAccessClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var current = _workspace.CurrentFolder;
+            if (await _workspace.PickFolderAsync(current))
+            {
+                // CurrentFolderChanged-Handler triggert den Audit automatisch.
+                // Falls der User denselben Pfad bestätigt, kein Auto-Trigger — manuell:
+                if (current == _workspace.CurrentFolder)
+                    await RunAuditAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Fehler", ex.Message, "OK");
         }
     }
 
@@ -162,6 +208,7 @@ public partial class HomePage : ContentPage
         ChainContainer.Children.Clear();
         SummaryBorder.IsVisible = false;
         NewFilesBorder.IsVisible = false;
+        PermissionBorder.IsVisible = false;
         StatusLabel.Text = "";
         StatusLabel.TextColor = Color.FromArgb("#6B7280");
         FooterLabel.Text = "";

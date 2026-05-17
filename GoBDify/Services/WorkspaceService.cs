@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Storage;
 using GoBDify.Core;
 
 namespace GoBDify.Services;
@@ -49,6 +50,20 @@ public class WorkspaceService
     }
 
     public void SaveSettings() => AppSettingsStore.Save(Settings);
+
+    /// <summary>
+    /// Öffnet den Folder-Picker (mit optionaler Pfad-Vorauswahl), registriert
+    /// die Auswahl in der FutureAccessList und setzt sie als CurrentFolder.
+    /// </summary>
+    /// <returns>true wenn ein Ordner gewählt wurde, false bei Abbruch.</returns>
+    public async Task<bool> PickFolderAsync(string? initialPath = null)
+    {
+        var result = await FolderPicker.PickAsync(initialPath ?? string.Empty, default);
+        if (result?.Folder?.Path == null) return false;
+        await WindowsFolderAccess.RegisterAsync(result.Folder.Path);
+        CurrentFolder = result.Folder.Path;
+        return true;
+    }
 
     private void SyncRecent()
     {

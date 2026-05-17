@@ -97,6 +97,24 @@
         <ScrollView Grid.Row="2" x:Name="MainScroll" Padding="20,10">
             <VerticalStackLayout Spacing="10">
                 <Label x:Name="StatusLabel" Text="" FontSize="12" TextColor="#6B7280"/>
+
+                <Border x:Name="PermissionBorder" IsVisible="False"
+                        Stroke="#DC2626" StrokeThickness="1"
+                        BackgroundColor="#FEE2E2" Padding="18,14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="10"/></Border.StrokeShape>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" RowSpacing="0">
+                        <Label Grid.Column="0" Text="🔒" FontSize="28" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Zugriff auf den Ordner verweigert" FontSize="16" FontAttributes="Bold" TextColor="#991B1B"/>
+                            <Label x:Name="PermissionDetail" Text="" FontSize="12" TextColor="#7F1D1D"/>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Zugriff freigeben"
+                                Style="{StaticResource PrimaryButton}"
+                                Clicked="OnGrantAccessClicked"
+                                VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
                 <VerticalStackLayout x:Name="ChainContainer" Spacing="8"/>
                 <Border x:Name="SummaryBorder" IsVisible="False" Padding="18,14" StrokeThickness="0">
                     <Border.StrokeShape><RoundRectangle CornerRadius="10"/></Border.StrokeShape>
