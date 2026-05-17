@@ -22,7 +22,7 @@ Die Lösung besteht aus drei Komponenten in einer Solution:
 
 GoBDify nutzt sogenannte *hashes*, um ein GoBD-konformes Dokumentenmanagement zu erleichtern. Hashes sind kryptographisch sichere 'Quersummen' über Daten, d.h. sie lassen sich nicht durch gezielte Änderungen an den Daten reproduzieren. Damit können hashes dem Ziel der Veränderungssicherheit hilfreich sein. Es bedarf aber einer zusätzlichen Sicherheit, die verhindert, dass hashes nicht einfach neu erzeugt werden können.
 
-Konkret baut die App sha256 hashes aus den zu archivierenden Dateien, z.B. in einem Cloud-Verzeichnis, das über das Burger-Menü ausgewählt wird, und speichert deren hashes in einer .sha256-Dateie, die mit dem Linux-Tool `sha256sum -c XXX.sha256` überprüft werden kann. Für die GoBD-Bedingung der veränderungssicheren Speicherung wird in einem zweiten Schritt ein hash auf die im ersten Schritt erstellte .sha256-Datei angefertigt und an eine Zertifizierungsautorität gesandt, die bestätig, dass der hash zu einem bestimmten Zeitpunkt einen bestimmten Wert hat (timestamping). Manipulationen der archivierten Dokumente führen also dazu, dass der entsprechende hash in der .sha256-Datei nicht mehr stimmt; und wird der hash des Dokuments in der .sha256-Datei geändert, stimmt  wiederum deren hash nicht mehr, wobei ein erneutes hashen nur zusammen mit der Erzeugung eines neuen timestamp möglich ist, was bei einer Buchprüfung auffallen dürfte. Neben den Archivdokumenten wird auch die jeweils letzte erzeugte .sha256-Datei gehasht, so dass sich eine art Blockchain bildet.
+Konkret baut die App sha256 hashes aus den zu archivierenden Dateien, z.B. in einem Cloud-Verzeichnis, das über das Burger-Menü ausgewählt wird, und speichert deren hashes in einer .sha256-Datei, die mit dem Linux-Tool `sha256sum -c XXX.sha256` überprüft werden kann. Für die GoBD-Bedingung der veränderungssicheren Speicherung wird in einem zweiten Schritt ein hash auf die im ersten Schritt erstellte .sha256-Datei angefertigt und an eine Zertifizierungsautorität gesandt, die bestätig, dass der hash zu einem bestimmten Zeitpunkt einen bestimmten Wert hat (timestamping). Manipulationen der archivierten Dokumente führen also dazu, dass der entsprechende hash in der .sha256-Datei nicht mehr stimmt; und wird der hash des Dokuments in der .sha256-Datei geändert, stimmt  wiederum deren hash nicht mehr, wobei ein erneutes hashen nur zusammen mit der Erzeugung eines neuen timestamp möglich ist, was bei einer Buchprüfung auffallen dürfte. Neben den Archivdokumenten wird auch die jeweils letzte erzeugte .sha256-Datei gehasht, so dass sich eine art Blockchain bildet.
 
 Voraussetzung für GoBD-Konformität ist allerdings, dass man die Dokumente zeitnah hasht, z.B. auch wenn man unterwegs ist. Deshalb ist geplant, neben der Desktop-App, in Zukunft eine mobile App zur Verfügung zu stellen.
 
@@ -162,13 +162,14 @@ Issues und Pull Requests willkommen. Bei Bug-Reports bitte Plattform,
 Version (`gobdify config show` für die CLI bzw. das Hilfe-Menü der App) und
 ein Minimalbeispiel angeben.
 
-## Todo
+## Zukünftige Planung (Milestones)
 
 In dieser Reihenfolge:
 - MacOS App mit Notariserung auch des MacOS-CLI-Tools
 - Android-App
 - iOS-App
-- Gtk-App für Linux (inklusive mobile, mit libadwaita, siehe https://mauigtk.net)
+- Gtk-App für Linux (siehe https://mauigtk.net)
+- Gtk-App für mobile Linux (mit libadwaita)
 
 ## Lizenz
 
