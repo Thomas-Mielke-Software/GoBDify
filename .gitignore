@@ -18,8 +18,9 @@ GoBDify/GoBDify.csproj.user
 
 # Staging-Ordner für CLI-Publish vor dem Zippen
 /publish/
-/GoBDify.Cli/publish/
-/GoBDify.Core/publish/
+
+# Upload-Staging für easyct.de (umbenannte MSIX + .appinstaller)
+/ftp-upload/
 
 # Android-Signaturkeystore (privat, lokal lassen)
 *.keystore
