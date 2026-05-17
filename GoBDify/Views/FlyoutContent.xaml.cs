@@ -111,6 +111,7 @@ public partial class FlyoutContent : ContentView
         {
             var result = await FolderPicker.PickAsync(_workspace.CurrentFolder ?? string.Empty, default);
             if (result?.Folder?.Path == null) return;
+            await WindowsFolderAccess.RegisterAsync(result.Folder.Path);
             _workspace.CurrentFolder = result.Folder.Path;
             Shell.Current.FlyoutIsPresented = false;
             await Shell.Current.GoToAsync("//home");

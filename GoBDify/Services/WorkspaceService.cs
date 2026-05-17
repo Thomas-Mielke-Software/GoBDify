@@ -42,6 +42,7 @@ public class WorkspaceService
         if (Settings.RecentFolders.Remove(path))
         {
             if (Settings.LastFolder == path) Settings.LastFolder = null;
+            WindowsFolderAccess.Forget(path);
             SyncRecent();
             SaveSettings();
         }
