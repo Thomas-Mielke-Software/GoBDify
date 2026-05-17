@@ -162,6 +162,14 @@ Issues und Pull Requests willkommen. Bei Bug-Reports bitte Plattform,
 Version (`gobdify config show` für die CLI bzw. das Hilfe-Menü der App) und
 ein Minimalbeispiel angeben.
 
+## Todo
+
+In dieser Reihenfolge:
+- MacOS App mit Notariserung auch des MacOS-CLI-Tools
+- Android-App
+- iOS-App
+- Gtk-App für Linux (inklusive mobile, mit libadwaita, siehe https://mauigtk.net)
+
 ## Lizenz
 
 GNU Affero GPL v3.0 — siehe [LICENSE](LICENSE).
