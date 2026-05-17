@@ -24,8 +24,6 @@ public class WorkspaceService
             {
                 Settings.RecentFolders.Remove(value);
                 Settings.RecentFolders.Insert(0, value);
-                if (Settings.RecentFolders.Count > 12)
-                    Settings.RecentFolders.RemoveAt(Settings.RecentFolders.Count - 1);
                 SyncRecent();
             }
             SaveSettings();
