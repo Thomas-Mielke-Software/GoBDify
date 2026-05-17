@@ -68,7 +68,7 @@ set ARCH=%~2
 echo === GUI %RID% ===
 dotnet publish %GUI_CSPROJ% -f %TFM% -c Release -p:RuntimeIdentifierOverride=%RID% || exit /b 1
 set TARGET=dist\gobdify-gui-%VERSION%-windows-%ARCH%.msix
-set UPLOAD=ftp-upload\GoBDify_%ARCH%.msix
+set UPLOAD=ftp-upload\gobdify-gui-windows-%ARCH%.msix
 if exist "%TARGET%" del "%TARGET%"
 if exist "%UPLOAD%" del "%UPLOAD%"
 powershell -NoProfile -Command "$src = Get-ChildItem -Path 'GoBDify' -Recurse -Filter '*.msix' | Where-Object { $_.FullName -match '%RID%' -and $_.FullName -notmatch 'Dependencies' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $src) { Write-Error 'MSIX-Datei nicht gefunden'; exit 1 }; Copy-Item $src.FullName '%TARGET%'; Copy-Item $src.FullName '%UPLOAD%'" || exit /b 1
@@ -93,8 +93,9 @@ exit /b 0
 :writeAppInstaller
 set ARCH=%~1
 set AIFILE=ftp-upload\GoBDify_%ARCH%.appinstaller
+set MSIXNAME=gobdify-gui-windows-%ARCH%.msix
 echo === AppInstaller %ARCH% ===
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\write-appinstaller.ps1 -Architecture "%ARCH%" -Version "%MSIX_VERSION%" -IdentityName "%IDENTITY_NAME%" -Publisher "%IDENTITY_PUBLISHER%" -BaseUri "%UPDATE_BASE%" -OutPath "%AIFILE%" || exit /b 1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\write-appinstaller.ps1 -Architecture "%ARCH%" -Version "%MSIX_VERSION%" -IdentityName "%IDENTITY_NAME%" -Publisher "%IDENTITY_PUBLISHER%" -BaseUri "%UPDATE_BASE%" -MsixFileName "%MSIXNAME%" -OutPath "%AIFILE%" || exit /b 1
 exit /b 0
 
 :fail

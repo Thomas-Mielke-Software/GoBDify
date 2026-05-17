@@ -4,11 +4,12 @@ param(
     [Parameter(Mandatory=$true)] [string]$IdentityName,
     [Parameter(Mandatory=$true)] [string]$Publisher,
     [Parameter(Mandatory=$true)] [string]$BaseUri,
+    [Parameter(Mandatory=$true)] [string]$MsixFileName,
     [Parameter(Mandatory=$true)] [string]$OutPath
 )
 
 $selfUri = "$BaseUri/GoBDify_$Architecture.appinstaller"
-$msixUri = "$BaseUri/GoBDify_$Architecture.msix"
+$msixUri = "$BaseUri/$MsixFileName"
 
 $xml = @"
 <?xml version="1.0" encoding="utf-8"?>
