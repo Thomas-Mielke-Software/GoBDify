@@ -8,7 +8,7 @@ param(
     [Parameter(Mandatory=$true)] [string]$OutPath
 )
 
-$selfUri = "$BaseUri/GoBDify_$Architecture.appinstaller"
+$selfUri = "$BaseUri/gobdify-gui-windows-$Architecture.appinstaller"
 $msixUri = "$BaseUri/$MsixFileName"
 
 $xml = @"

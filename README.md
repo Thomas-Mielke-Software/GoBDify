@@ -57,8 +57,8 @@ Voraussetzung für GoBD-Konformität ist allerdings, dass man die Dokumente zeit
 
 **Empfohlen — installieren mit Auto-Update:**
 
-- [GoBDify für Windows x64](https://easyct.de/GoBDify_x64.appinstaller)
-- [GoBDify für Windows ARM64](https://easyct.de/GoBDify_arm64.appinstaller)
+- [GoBDify für Windows x64](https://easyct.de/gobdify-gui-windows-x64.appinstaller)
+- [GoBDify für Windows ARM64](https://easyct.de/gobdify-gui-windows-arm64.appinstaller)
 
 Die heruntergeladene `.appinstaller`-Datei doppelklicken — der Windows-
 AppInstaller-Dialog öffnet sich und installiert die signierte MSIX. Künftige

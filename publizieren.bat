@@ -92,7 +92,7 @@ exit /b 0
 
 :writeAppInstaller
 set ARCH=%~1
-set AIFILE=ftp-upload\GoBDify_%ARCH%.appinstaller
+set AIFILE=ftp-upload\gobdify-gui-windows-%ARCH%.appinstaller
 set MSIXNAME=gobdify-gui-windows-%ARCH%.msix
 echo === AppInstaller %ARCH% ===
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\write-appinstaller.ps1 -Architecture "%ARCH%" -Version "%MSIX_VERSION%" -IdentityName "%IDENTITY_NAME%" -Publisher "%IDENTITY_PUBLISHER%" -BaseUri "%UPDATE_BASE%" -MsixFileName "%MSIXNAME%" -OutPath "%AIFILE%" || exit /b 1

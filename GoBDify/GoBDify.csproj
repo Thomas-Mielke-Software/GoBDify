@@ -51,7 +51,7 @@
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<!-- AppInstaller wird von publizieren.bat erzeugt (tools\write-appinstaller.ps1).
 		     URI hier nur als Referenz; eigene .appinstaller pro Architektur. -->
-		<AppInstallerUri>https://easyct.de/GoBDify_x64.appinstaller</AppInstallerUri>
+		<AppInstallerUri>https://easyct.de/gobdify-gui-windows-x64.appinstaller</AppInstallerUri>
 		<HoursBetweenUpdateChecks>672</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
