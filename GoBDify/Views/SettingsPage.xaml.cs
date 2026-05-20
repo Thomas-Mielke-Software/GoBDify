@@ -9,7 +9,7 @@ public partial class SettingsPage : ContentPage
     private readonly WorkspaceService _workspace;
     private readonly Dictionary<string, CheckBox> _checkboxes = new();
 
-    private const string RepoUrl = "https://github.com/thomiel/GoBDify";
+    private const string RepoUrl = "https://github.com/Thomas-Mielke-Software/GoBDify";
     private const string LicenseUrl = "https://www.gnu.org/licenses/agpl-3.0.html";
 
     public SettingsPage()

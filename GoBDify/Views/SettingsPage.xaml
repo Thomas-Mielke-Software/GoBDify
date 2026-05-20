@@ -56,7 +56,7 @@
 
                         <Label Grid.Row="4" Grid.Column="0" Text="Homepage"  FontSize="12" TextColor="#6B7280"/>
                         <Label Grid.Row="4" Grid.Column="1" x:Name="RepoLink" FontSize="12" TextColor="#5d76dd" TextDecorations="Underline">
-                            <Label.Text>github.com/thomiel/GoBDify</Label.Text>
+                            <Label.Text>github.com/Thomas-Mielke-Software/GoBDify</Label.Text>
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnRepoTapped"/>
                             </Label.GestureRecognizers>

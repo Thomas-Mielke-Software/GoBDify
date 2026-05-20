@@ -129,7 +129,7 @@ verifizieren.
 ## Entwicklung
 
 ```bash
-git clone https://github.com/thomiel/GoBDify.git
+git clone https://github.com/Thomas-Mielke-Software/GoBDify.git
 cd GoBDify
 dotnet build GoBDify.sln
 ```
