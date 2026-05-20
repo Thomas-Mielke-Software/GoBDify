@@ -38,7 +38,16 @@
 
                     <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8" Margin="0,8,0,0">
                         <Label Grid.Row="0" Grid.Column="0" Text="Version"   FontSize="12" TextColor="#6B7280"/>
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="VersionLabel" Text="" FontSize="12" TextColor="#111827"/>
+                        <Grid   Grid.Row="0" Grid.Column="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                            <Label Grid.Column="0" x:Name="VersionLabel" Text="" FontSize="12" TextColor="#111827" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" x:Name="UpdateStatusLabel" Text="" FontSize="11" TextColor="#6B7280" VerticalOptions="Center"/>
+                            <Button Grid.Column="2" x:Name="CheckUpdateBtn"
+                                    Text="Nach Updates suchen"
+                                    BackgroundColor="White" TextColor="#5d76dd"
+                                    BorderColor="#5d76dd" BorderWidth="1" CornerRadius="6"
+                                    Clicked="OnCheckUpdateClicked"
+                                    HeightRequest="28" Padding="10,0" FontSize="11"/>
+                        </Grid>
 
                         <Label Grid.Row="1" Grid.Column="0" Text="Autor"     FontSize="12" TextColor="#6B7280"/>
                         <Label Grid.Row="1" Grid.Column="1" Text="Thomas Mielke" FontSize="12" TextColor="#111827"/>

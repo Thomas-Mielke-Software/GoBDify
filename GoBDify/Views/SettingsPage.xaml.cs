@@ -32,6 +32,55 @@ public partial class SettingsPage : ContentPage
         try { await Launcher.OpenAsync(RepoUrl); } catch { }
     }
 
+    private async void OnCheckUpdateClicked(object sender, EventArgs e)
+    {
+#if WINDOWS
+        CheckUpdateBtn.IsEnabled = false;
+        UpdateStatusLabel.Text = "Wird geprüft …";
+        UpdateStatusLabel.TextColor = Color.FromArgb("#6B7280");
+        try
+        {
+            var result = await Windows.ApplicationModel.Package.Current.CheckUpdateAvailabilityAsync();
+            switch (result.Availability)
+            {
+                case Windows.ApplicationModel.PackageUpdateAvailability.NoUpdates:
+                    UpdateStatusLabel.Text = "Aktuell — keine neuere Version vorhanden.";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#059669");
+                    break;
+                case Windows.ApplicationModel.PackageUpdateAvailability.Available:
+                    UpdateStatusLabel.Text = "Update verfügbar — wird beim nächsten App-Start angewendet.";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#1E3A8A");
+                    break;
+                case Windows.ApplicationModel.PackageUpdateAvailability.Required:
+                    UpdateStatusLabel.Text = "Pflicht-Update verfügbar — App muss neu gestartet werden.";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#991B1B");
+                    break;
+                case Windows.ApplicationModel.PackageUpdateAvailability.Error:
+                    UpdateStatusLabel.Text = "Fehler bei der Update-Prüfung — siehe AppInstaller-Logs.";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#991B1B");
+                    break;
+                default:
+                    UpdateStatusLabel.Text = "Status konnte nicht ermittelt werden (vermutlich nicht via AppInstaller installiert).";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#92400E");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            UpdateStatusLabel.Text = $"Fehler: {ex.Message}";
+            UpdateStatusLabel.TextColor = Color.FromArgb("#991B1B");
+        }
+        finally
+        {
+            CheckUpdateBtn.IsEnabled = true;
+        }
+#else
+        UpdateStatusLabel.Text = "Auto-Update nur unter Windows verfügbar.";
+        UpdateStatusLabel.TextColor = Color.FromArgb("#6B7280");
+        await Task.CompletedTask;
+#endif
+    }
+
     private void BuildTsaList()
     {
         TsaList.Children.Clear();
