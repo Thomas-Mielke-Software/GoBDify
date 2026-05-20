@@ -31,10 +31,37 @@
 
             <Border BackgroundColor="White" Stroke="#E5E7EB" StrokeThickness="1" Padding="16">
                 <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Über" FontAttributes="Bold" TextColor="#111827"/>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Über GoBDify" FontAttributes="Bold" TextColor="#111827"/>
                     <Label Text="GoBDify erzeugt eine veränderungsfreie Ordnerhistorie durch eine Hash-Kette mit RFC3161-Timestamps."
                            FontSize="12" TextColor="#6B7280"/>
+
+                    <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8" Margin="0,8,0,0">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Version"   FontSize="12" TextColor="#6B7280"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="VersionLabel" Text="" FontSize="12" TextColor="#111827"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="Autor"     FontSize="12" TextColor="#6B7280"/>
+                        <Label Grid.Row="1" Grid.Column="1" Text="Thomas Mielke" FontSize="12" TextColor="#111827"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="Copyright" FontSize="12" TextColor="#6B7280"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="© 2024–2026 Thomas Mielke" FontSize="12" TextColor="#111827"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Text="Lizenz"    FontSize="12" TextColor="#6B7280"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="LicenseLink" FontSize="12" TextColor="#5d76dd" TextDecorations="Underline">
+                            <Label.Text>GNU Affero General Public License v3.0</Label.Text>
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnLicenseTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <Label Grid.Row="4" Grid.Column="0" Text="Homepage"  FontSize="12" TextColor="#6B7280"/>
+                        <Label Grid.Row="4" Grid.Column="1" x:Name="RepoLink" FontSize="12" TextColor="#5d76dd" TextDecorations="Underline">
+                            <Label.Text>github.com/thomiel/GoBDify</Label.Text>
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnRepoTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 

@@ -9,13 +9,27 @@ public partial class SettingsPage : ContentPage
     private readonly WorkspaceService _workspace;
     private readonly Dictionary<string, CheckBox> _checkboxes = new();
 
+    private const string RepoUrl = "https://github.com/thomiel/GoBDify";
+    private const string LicenseUrl = "https://www.gnu.org/licenses/agpl-3.0.html";
+
     public SettingsPage()
     {
         InitializeComponent();
         _workspace = IPlatformApplication.Current!.Services.GetRequiredService<WorkspaceService>();
         BuildTsaList();
         ParanoiaSwitch.IsToggled = _workspace.Settings.ParanoiaMode;
+        VersionLabel.Text = AppInfo.Current.VersionString;
         UpdateValidation();
+    }
+
+    private async void OnLicenseTapped(object sender, TappedEventArgs e)
+    {
+        try { await Launcher.OpenAsync(LicenseUrl); } catch { }
+    }
+
+    private async void OnRepoTapped(object sender, TappedEventArgs e)
+    {
+        try { await Launcher.OpenAsync(RepoUrl); } catch { }
     }
 
     private void BuildTsaList()
