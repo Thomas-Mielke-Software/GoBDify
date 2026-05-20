@@ -5,10 +5,14 @@ param(
     [Parameter(Mandatory=$true)] [string]$Publisher,
     [Parameter(Mandatory=$true)] [string]$BaseUri,
     [Parameter(Mandatory=$true)] [string]$MsixFileName,
-    [Parameter(Mandatory=$true)] [string]$OutPath
+    [Parameter(Mandatory=$true)] [string]$OutPath,
+    [Parameter(Mandatory=$false)] [string]$AppInstallerFileName
 )
 
-$selfUri = "$BaseUri/gobdify-gui-windows-$Architecture.appinstaller"
+if (-not $AppInstallerFileName) {
+    $AppInstallerFileName = "gobdify-gui-windows-$Architecture.appinstaller"
+}
+$selfUri = "$BaseUri/$AppInstallerFileName"
 $msixUri = "$BaseUri/$MsixFileName"
 
 $xml = @"

@@ -69,11 +69,14 @@ echo === GUI %RID% ===
 dotnet publish %GUI_CSPROJ% -f %TFM% -c Release -p:RuntimeIdentifierOverride=%RID% || exit /b 1
 set TARGET=dist\gobdify-gui-%VERSION%-windows-%ARCH%.msix
 set UPLOAD=ftp-upload\gobdify-gui-windows-%ARCH%.msix
+set UPLOAD_LEGACY=ftp-upload\GoBDify_%ARCH%.msix
 if exist "%TARGET%" del "%TARGET%"
 if exist "%UPLOAD%" del "%UPLOAD%"
-powershell -NoProfile -Command "$src = Get-ChildItem -Path 'GoBDify' -Recurse -Filter '*.msix' | Where-Object { $_.FullName -match '%RID%' -and $_.FullName -notmatch 'Dependencies' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $src) { Write-Error 'MSIX-Datei nicht gefunden'; exit 1 }; Copy-Item $src.FullName '%TARGET%'; Copy-Item $src.FullName '%UPLOAD%'" || exit /b 1
+if exist "%UPLOAD_LEGACY%" del "%UPLOAD_LEGACY%"
+powershell -NoProfile -Command "$src = Get-ChildItem -Path 'GoBDify' -Recurse -Filter '*.msix' | Where-Object { $_.FullName -match '%RID%' -and $_.FullName -notmatch 'Dependencies' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if (-not $src) { Write-Error 'MSIX-Datei nicht gefunden'; exit 1 }; Copy-Item $src.FullName '%TARGET%'; Copy-Item $src.FullName '%UPLOAD%'; Copy-Item $src.FullName '%UPLOAD_LEGACY%'" || exit /b 1
 echo   -^> %TARGET%
 echo   -^> %UPLOAD%
+echo   -^> %UPLOAD_LEGACY%  (alt-URL fuer bereits installierte 1.3.0-Clients)
 exit /b 0
 
 :buildCli
@@ -92,10 +95,17 @@ exit /b 0
 
 :writeAppInstaller
 set ARCH=%~1
+echo === AppInstaller %ARCH% ===
+rem Neue URL (Standard)
 set AIFILE=ftp-upload\gobdify-gui-windows-%ARCH%.appinstaller
 set MSIXNAME=gobdify-gui-windows-%ARCH%.msix
-echo === AppInstaller %ARCH% ===
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\write-appinstaller.ps1 -Architecture "%ARCH%" -Version "%MSIX_VERSION%" -IdentityName "%IDENTITY_NAME%" -Publisher "%IDENTITY_PUBLISHER%" -BaseUri "%UPDATE_BASE%" -MsixFileName "%MSIXNAME%" -OutPath "%AIFILE%" || exit /b 1
+echo   -^> %AIFILE%
+rem Legacy-URL fuer bereits installierte 1.3.0-Clients
+set AIFILE_LEGACY=ftp-upload\GoBDify_%ARCH%.appinstaller
+set MSIXNAME_LEGACY=GoBDify_%ARCH%.msix
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\write-appinstaller.ps1 -Architecture "%ARCH%" -Version "%MSIX_VERSION%" -IdentityName "%IDENTITY_NAME%" -Publisher "%IDENTITY_PUBLISHER%" -BaseUri "%UPDATE_BASE%" -MsixFileName "%MSIXNAME_LEGACY%" -OutPath "%AIFILE_LEGACY%" -AppInstallerFileName "GoBDify_%ARCH%.appinstaller" || exit /b 1
+echo   -^> %AIFILE_LEGACY%  (alt-URL fuer bereits installierte 1.3.0-Clients)
 exit /b 0
 
 :fail
