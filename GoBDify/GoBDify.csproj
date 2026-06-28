@@ -66,18 +66,12 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
-	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
-	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
