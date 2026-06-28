@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 set GUI_CSPROJ=GoBDify\GoBDify.csproj
 set CLI_CSPROJ=GoBDify.Cli\GoBDify.Cli.csproj
-set TFM=net8.0-windows10.0.19041.0
+set TFM=net10.0-windows10.0.19041.0
 set CLI_FLAGS=-c Release --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishTrimmed=true
 set FZ="C:\Program Files\FileZilla FTP Client\filezilla.exe"
 set IDENTITY_NAME=software.mielke.gobdify

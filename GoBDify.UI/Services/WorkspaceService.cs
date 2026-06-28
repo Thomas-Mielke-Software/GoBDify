@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Maui.Storage;
 using GoBDify.Core;
 
 namespace GoBDify.Services;
 
 public class WorkspaceService
 {
+    private readonly IFolderPicker _folderPicker;
+
     public AppSettings Settings { get; private set; } = AppSettingsStore.Load();
     public ChainProcessor Processor { get; } = new();
 
@@ -61,8 +62,9 @@ public class WorkspaceService
         }
     }
 
-    public WorkspaceService()
+    public WorkspaceService(IFolderPicker folderPicker)
     {
+        _folderPicker = folderPicker;
         SyncRecent();
     }
 
@@ -71,7 +73,7 @@ public class WorkspaceService
         if (Settings.RecentFolders.Remove(path))
         {
             if (Settings.LastFolder == path) Settings.LastFolder = null;
-            WindowsFolderAccess.Forget(path);
+            _folderPicker.ForgetFolder(path);
             SyncRecent();
             SaveSettings();
         }
@@ -80,16 +82,16 @@ public class WorkspaceService
     public void SaveSettings() => AppSettingsStore.Save(Settings);
 
     /// <summary>
-    /// Öffnet den Folder-Picker (mit optionaler Pfad-Vorauswahl), registriert
-    /// die Auswahl in der FutureAccessList und setzt sie als CurrentFolder.
+    /// Öffnet den Folder-Picker (mit optionaler Pfad-Vorauswahl) und setzt die
+    /// Auswahl als CurrentFolder. Plattformspezifische Zugriffspersistenz
+    /// erledigt die <see cref="IFolderPicker"/>-Implementierung.
     /// </summary>
     /// <returns>true wenn ein Ordner gewählt wurde, false bei Abbruch.</returns>
     public async Task<bool> PickFolderAsync(string? initialPath = null)
     {
-        var result = await FolderPicker.PickAsync(initialPath ?? string.Empty, default);
-        if (result?.Folder?.Path == null) return false;
-        await WindowsFolderAccess.RegisterAsync(result.Folder.Path);
-        SetCurrentFolderToTop(result.Folder.Path);
+        var path = await _folderPicker.PickFolderAsync(initialPath);
+        if (path == null) return false;
+        SetCurrentFolderToTop(path);
         return true;
     }
 
