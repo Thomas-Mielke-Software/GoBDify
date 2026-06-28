@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Dispatching;
 using Microsoft.Maui.Hosting;
 using Platform.Maui.Linux.Gtk4.Hosting;
 using Platform.Maui.Linux.Gtk4.Essentials.Hosting;
@@ -25,6 +26,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<IFolderPicker, GtkFolderPicker>();
         builder.Services.AddSingleton<WorkspaceService>();
 
-        return builder.Build();
+        var app = builder.Build();
+
+        // GTK4 setzt keinen SynchronizationContext auf dem UI-Thread — ohne ihn
+        // laufen Progress<T>-Callbacks und await-Fortsetzungen off-thread und
+        // crashen beim UI-Zugriff. Wir installieren einen Dispatcher-gestützten.
+        var dispatcher = app.Services.GetRequiredService<IDispatcher>();
+        SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(dispatcher));
+
+        return app;
     }
 }
