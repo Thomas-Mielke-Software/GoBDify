@@ -45,21 +45,12 @@ public class WorkspaceService
     {
         Settings.RecentFolders.Remove(path);
         Settings.RecentFolders.Insert(0, path);
-        if (Settings.LastFolder == path)
-        {
-            // CurrentFolder-Setter würde wegen Gleichheit nichts tun;
-            // wir müssen Sync+Save selbst auslösen und das Event feuern.
-            SyncRecent();
-            SaveSettings();
-            CurrentFolderChanged?.Invoke(this, path);
-        }
-        else
-        {
-            // ändert LastFolder; Setter macht Sync+Save+Event.
-            // (Wir haben RecentFolders schon umsortiert; der Setter sieht
-            // den Pfad in der Liste und rührt sie nicht mehr an.)
-            CurrentFolder = path;
-        }
+        Settings.LastFolder = path;
+        // Immer die ObservableCollection mitziehen — sonst sieht die Flyout-Liste
+        // den neu hinzugefügten/umsortierten Ordner erst nach App-Neustart.
+        SyncRecent();
+        SaveSettings();
+        CurrentFolderChanged?.Invoke(this, path);
     }
 
     public WorkspaceService(IFolderPicker folderPicker)
