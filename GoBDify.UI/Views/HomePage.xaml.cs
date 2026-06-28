@@ -25,6 +25,17 @@ public partial class HomePage : ContentPage
             UpdateHeader();
             await RunAuditAsync();
         };
+
+        // GTK4 rendert Shell.FlyoutContentTemplate (FlyoutContent) nicht — dort
+        // läge die Ordnerverwaltung. Auf solchen Plattformen blenden wir sie hier
+        // auf der Seite ein. Windows behält den Flyout und bleibt unverändert.
+        if (OperatingSystem.IsLinux())
+        {
+            FolderBar.IsVisible = true;
+            _workspace.RecentFolders.CollectionChanged += (_, __) => RenderHomeFolders();
+            _workspace.CurrentFolderChanged += (_, __) => RenderHomeFolders();
+            RenderHomeFolders();
+        }
     }
 
     protected override async void OnAppearing()
@@ -33,7 +44,10 @@ public partial class HomePage : ContentPage
         UpdateHeader();
         if (string.IsNullOrEmpty(_workspace.CurrentFolder))
         {
-            Shell.Current.FlyoutIsPresented = true;
+            // Auf GTK ist der Flyout-Inhalt nicht verfügbar; die Auswahl läuft über
+            // die FolderBar auf der Seite. Sonst den Flyout zur Auswahl öffnen.
+            if (!OperatingSystem.IsLinux())
+                Shell.Current.FlyoutIsPresented = true;
             return;
         }
         if (!_running && ChainContainer.Children.Count == 0)
@@ -185,6 +199,86 @@ public partial class HomePage : ContentPage
         {
             await DisplayAlert("Fehler", ex.Message, "OK");
         }
+    }
+
+    // --- Ordnerverwaltung auf der Seite (nur GTK/Linux, siehe Konstruktor) ---
+
+    private async void OnPickFolderClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await _workspace.PickFolderAsync(_workspace.CurrentFolder);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Fehler", ex.Message, "OK");
+        }
+    }
+
+    private void RenderHomeFolders()
+    {
+        if (HomeRecentList is null) return;
+        HomeRecentList.Children.Clear();
+
+        if (_workspace.RecentFolders.Count == 0)
+        {
+            HomeRecentList.Children.Add(new Label
+            {
+                Text = "Noch kein Ordner gewählt.",
+                FontSize = 12,
+                TextColor = Color.FromArgb("#6B7280")
+            });
+            return;
+        }
+
+        foreach (var folder in _workspace.RecentFolders)
+        {
+            var path = folder;
+            bool active = string.Equals(path, _workspace.CurrentFolder, StringComparison.OrdinalIgnoreCase);
+
+            // Buttons statt TapGestureRecognizer: das GTK4-Backend liefert Taps auf
+            // (transparente) Layouts nicht zuverlässig — Buttons hingegen schon.
+            var open = new Button
+            {
+                Text = ShortName(path),
+                FontSize = 14,
+                FontAttributes = active ? FontAttributes.Bold : FontAttributes.None,
+                TextColor = active ? Colors.White : Color.FromArgb("#111827"),
+                BackgroundColor = active ? Color.FromArgb("#5d76dd") : Color.FromArgb("#F3F4F6"),
+                Padding = new Thickness(12, 8),
+                CornerRadius = 6,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+            open.Clicked += (_, __) => _workspace.CurrentFolder = path;
+
+            var remove = new Button
+            {
+                Text = "✕",
+                FontSize = 13,
+                WidthRequest = 40,
+                Padding = 0,
+                CornerRadius = 6,
+                TextColor = Color.FromArgb("#6B7280"),
+                BackgroundColor = Color.FromArgb("#F3F4F6")
+            };
+            remove.Clicked += (_, __) => _workspace.RemoveRecent(path);
+
+            var grid = new Grid
+            {
+                ColumnDefinitions = new ColumnDefinitionCollection(
+                    new ColumnDefinition(GridLength.Star),
+                    new ColumnDefinition(GridLength.Auto)),
+                ColumnSpacing = 6
+            };
+            grid.Add(open, 0, 0);
+            grid.Add(remove, 1, 0);
+            HomeRecentList.Children.Add(grid);
+        }
+    }
+
+    private static string ShortName(string path)
+    {
+        try { return new DirectoryInfo(path).Name; } catch { return path; }
     }
 
     private void HandleCancelled()
