@@ -215,6 +215,51 @@ public partial class HomePage : ContentPage
         }
     }
 
+    private async void OnExportFoldersClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (_workspace.RecentFolders.Count == 0)
+            {
+                await DisplayAlert("Export", "Keine Ordner zum Exportieren vorhanden.", "OK");
+                return;
+            }
+            var path = await _workspace.ExportRecentFoldersAsync();
+            if (path != null)
+                await DisplayAlert("Export", $"Ordnerliste gespeichert:\n{path}", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Fehler", ex.Message, "OK");
+        }
+    }
+
+    private async void OnImportFoldersClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var choice = await DisplayActionSheet(
+                "Ordnerliste importieren", "Abbrechen", null,
+                "Bestehende ersetzen", "Zusammenführen");
+            var mode = choice switch
+            {
+                "Bestehende ersetzen" => (ImportMode?)ImportMode.Replace,
+                "Zusammenführen"      => ImportMode.Merge,
+                _                     => null
+            };
+            if (mode is null) return;
+
+            var result = await _workspace.ImportRecentFoldersAsync(mode.Value);
+            if (result is null) return; // Datei-Dialog abgebrochen
+
+            await DisplayAlert("Import", WorkspaceService.DescribeImportResult(result, mode.Value), "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Fehler", ex.Message, "OK");
+        }
+    }
+
     private void RenderHomeFolders()
     {
         if (HomeRecentList is null) return;

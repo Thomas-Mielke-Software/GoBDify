@@ -120,6 +120,57 @@ public partial class FlyoutContent : ContentView
         }
     }
 
+    private async void OnExportFoldersClicked(object sender, EventArgs e)
+    {
+        var page = Application.Current!.MainPage!;
+        try
+        {
+            if (_workspace.RecentFolders.Count == 0)
+            {
+                await page.DisplayAlert("Export", "Keine Ordner zum Exportieren vorhanden.", "OK");
+                return;
+            }
+            var path = await _workspace.ExportRecentFoldersAsync();
+            if (path != null)
+            {
+                Shell.Current.FlyoutIsPresented = false;
+                await page.DisplayAlert("Export", $"Ordnerliste gespeichert:\n{path}", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await page.DisplayAlert("Fehler", ex.Message, "OK");
+        }
+    }
+
+    private async void OnImportFoldersClicked(object sender, EventArgs e)
+    {
+        var page = Application.Current!.MainPage!;
+        try
+        {
+            var choice = await page.DisplayActionSheet(
+                "Ordnerliste importieren", "Abbrechen", null,
+                "Bestehende ersetzen", "Zusammenführen");
+            var mode = choice switch
+            {
+                "Bestehende ersetzen" => (ImportMode?)ImportMode.Replace,
+                "Zusammenführen"      => ImportMode.Merge,
+                _                     => null
+            };
+            if (mode is null) return;
+
+            var result = await _workspace.ImportRecentFoldersAsync(mode.Value);
+            if (result is null) return; // Datei-Dialog abgebrochen
+
+            Shell.Current.FlyoutIsPresented = false;
+            await page.DisplayAlert("Import", WorkspaceService.DescribeImportResult(result, mode.Value), "OK");
+        }
+        catch (Exception ex)
+        {
+            await page.DisplayAlert("Fehler", ex.Message, "OK");
+        }
+    }
+
     private async void OnSettingsClicked(object sender, EventArgs e)
     {
         Shell.Current.FlyoutIsPresented = false;

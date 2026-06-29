@@ -110,6 +110,14 @@
                                     Style="{StaticResource PrimaryButton}"
                                     Clicked="OnPickFolderClicked"/>
                         </Grid>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0" Text="Liste exportieren"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnExportFoldersClicked"/>
+                            <Button Grid.Column="1" Text="Liste importieren"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnImportFoldersClicked"/>
+                        </Grid>
                         <VerticalStackLayout x:Name="HomeRecentList" Spacing="4"/>
                     </VerticalStackLayout>
                 </Border>

@@ -23,6 +23,8 @@ namespace GoBDify
                     });
 
                 builder.Services.AddSingleton<IFolderPicker, WindowsFolderPicker>();
+                builder.Services.AddSingleton<IFileSaver, WindowsFileSaver>();
+                builder.Services.AddSingleton<IFileOpener, WindowsFileOpener>();
                 builder.Services.AddSingleton<WorkspaceService>();
 
 #if DEBUG

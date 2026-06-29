@@ -22,8 +22,10 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         });
 
-        // Plattform-Implementierung der Ordnerauswahl (GTK FileDialog).
+        // Plattform-Implementierung der Ordnerauswahl + Datei-Speicherung (GTK FileDialog).
         builder.Services.AddSingleton<IFolderPicker, GtkFolderPicker>();
+        builder.Services.AddSingleton<IFileSaver, GtkFileSaver>();
+        builder.Services.AddSingleton<IFileOpener, GtkFileOpener>();
         builder.Services.AddSingleton<WorkspaceService>();
 
         var app = builder.Build();
