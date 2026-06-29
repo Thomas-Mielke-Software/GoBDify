@@ -9,6 +9,10 @@ public partial class HomePage : ContentPage
     private readonly WorkspaceService _workspace;
     private bool _running;
     private CancellationTokenSource? _cts;
+    private string? _dragPath;
+    private BoxView? _gapSpacer;
+    private double _gapBase;
+    private int _gapVersion;
 
     // live UI controllers keyed by ChainIndex from events
     private readonly Dictionary<int, ChainCard> _cards = new();
@@ -276,6 +280,7 @@ public partial class HomePage : ContentPage
             return;
         }
 
+        var titles = FolderDisplay.DisambiguateTitles(_workspace.RecentFolders);
         foreach (var folder in _workspace.RecentFolders)
         {
             var path = folder;
@@ -285,7 +290,7 @@ public partial class HomePage : ContentPage
             // (transparente) Layouts nicht zuverlässig — Buttons hingegen schon.
             var open = new Button
             {
-                Text = ShortName(path),
+                Text = titles.TryGetValue(path, out var t) ? t : ShortName(path),
                 FontSize = 14,
                 FontAttributes = active ? FontAttributes.Bold : FontAttributes.None,
                 TextColor = active ? Colors.White : Color.FromArgb("#111827"),
@@ -317,13 +322,109 @@ public partial class HomePage : ContentPage
             };
             grid.Add(open, 0, 0);
             grid.Add(remove, 1, 0);
-            HomeRecentList.Children.Add(grid);
+
+            // Spacer für die animierte Einfügelücke (siehe OpenGap/CloseGap).
+            var spacer = new BoxView { HeightRequest = 0, Color = Colors.Transparent };
+            var rowContainer = new VerticalStackLayout { Spacing = 0, Children = { spacer, grid } };
+
+            // Drag&Drop-Sortierung (best effort — abhängig vom GTK4-Backend).
+            var drag = new DragGestureRecognizer { CanDrag = true };
+            drag.DragStarting += (_, __) =>
+            {
+                _dragPath = path;
+                Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(40), () =>
+                {
+                    if (_dragPath == path) rowContainer.IsVisible = false;
+                });
+            };
+            drag.DropCompleted += (_, __) => { rowContainer.IsVisible = true; _dragPath = null; CloseGap(); };
+            rowContainer.GestureRecognizers.Add(drag);
+
+            var drop = new DropGestureRecognizer { AllowDrop = true };
+            drop.DragOver += (_, e) =>
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+                DragDropHelper.SetMoveVisual(e);
+                if (_dragPath == null || _dragPath == path) { CloseGap(); return; }
+                OpenGap(spacer);
+            };
+            drop.DragLeave += (_, __) => CloseGap();
+            drop.Drop += (_, __) =>
+            {
+                CloseGap();
+                if (_dragPath != null && _dragPath != path)
+                    _workspace.MoveRecentBefore(_dragPath, path);
+                _dragPath = null;
+            };
+            rowContainer.GestureRecognizers.Add(drop);
+
+            HomeRecentList.Children.Add(rowContainer);
         }
+
+        // Drop-Zone unter dem letzten Eintrag, um ans Listenende zu verschieben.
+        if (_workspace.RecentFolders.Count > 0)
+            HomeRecentList.Children.Add(BuildEndDropZone());
+    }
+
+    private View BuildEndDropZone()
+    {
+        var endSpacer = new BoxView { HeightRequest = EndZoneBase, Color = Colors.Transparent };
+        var drop = new DropGestureRecognizer { AllowDrop = true };
+        drop.DragOver += (_, e) =>
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            DragDropHelper.SetMoveVisual(e);
+            if (_dragPath == null) { CloseGap(); return; }
+            OpenGap(endSpacer, EndZoneBase);
+        };
+        drop.DragLeave += (_, __) => CloseGap();
+        drop.Drop += (_, __) =>
+        {
+            CloseGap();
+            if (_dragPath != null) _workspace.MoveRecentToEnd(_dragPath);
+            _dragPath = null;
+        };
+        endSpacer.GestureRecognizers.Add(drop);
+        return endSpacer;
     }
 
     private static string ShortName(string path)
     {
         try { return new DirectoryInfo(path).Name; } catch { return path; }
+    }
+
+    // Drag-over: innerhalb der überfahrenen Zeile Platz schaffen (animiert).
+    private const double DropGap = 44;
+    private const double EndZoneBase = 24;
+
+    private void OpenGap(BoxView spacer, double baseHeight = 0)
+    {
+        if (ReferenceEquals(_gapSpacer, spacer)) return;
+        CloseGap();
+        _gapSpacer = spacer;
+        _gapBase = baseHeight;
+        int v = ++_gapVersion;
+        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(60), () =>
+        {
+            if (v != _gapVersion || !ReferenceEquals(_gapSpacer, spacer)) return;
+            AnimateGap(spacer, baseHeight + DropGap, Easing.CubicOut, 180);
+        });
+    }
+
+    private void CloseGap()
+    {
+        _gapVersion++;
+        var spacer = _gapSpacer;
+        var bas = _gapBase;
+        _gapSpacer = null;
+        if (spacer != null) AnimateGap(spacer, bas, Easing.CubicIn, 140);
+    }
+
+    private static void AnimateGap(BoxView spacer, double to, Easing easing, uint length)
+    {
+        spacer.AbortAnimation("gap");
+        double from = spacer.HeightRequest < 0 ? 0 : spacer.HeightRequest;
+        new Animation(h => spacer.HeightRequest = h, from, to, easing).Commit(spacer, "gap", length: length);
     }
 
     private void HandleCancelled()

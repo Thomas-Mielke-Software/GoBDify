@@ -75,6 +75,39 @@ public class WorkspaceService
         }
     }
 
+    /// <summary>
+    /// Verschiebt <paramref name="path"/> in der Recent-Liste an die Position
+    /// unmittelbar vor <paramref name="targetPath"/> (für Drag&amp;Drop-Sortierung).
+    /// Der aktive Ordner bleibt unberührt.
+    /// </summary>
+    public void MoveRecentBefore(string path, string targetPath)
+    {
+        var list = Settings.RecentFolders;
+        int old = list.IndexOf(path);
+        int target = list.IndexOf(targetPath);
+        if (old < 0 || target < 0 || old == target) return;
+
+        list.RemoveAt(old);
+        // Nach dem Entfernen rutscht alles hinter old um eine Position nach vorn.
+        if (target > old) target--;
+        list.Insert(target, path);
+
+        SyncRecent();
+        SaveSettings();
+    }
+
+    /// <summary>Verschiebt <paramref name="path"/> ans Ende der Recent-Liste.</summary>
+    public void MoveRecentToEnd(string path)
+    {
+        var list = Settings.RecentFolders;
+        int old = list.IndexOf(path);
+        if (old < 0 || old == list.Count - 1) return;
+        list.RemoveAt(old);
+        list.Add(path);
+        SyncRecent();
+        SaveSettings();
+    }
+
     public void SaveSettings() => AppSettingsStore.Save(Settings);
 
     /// <summary>

@@ -11,7 +11,7 @@
     <RootNamespace>GoBDify</RootNamespace>
     <ApplicationTitle>GoBDify</ApplicationTitle>
     <ApplicationId>software.mielke.gobdify</ApplicationId>
-    <Version>1.3.1</Version>
+    <Version>1.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

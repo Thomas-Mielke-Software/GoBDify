@@ -7,7 +7,7 @@
             <Label Text="ARBEITSVERZEICHNISSE" FontSize="10" TextColor="#9CA3AF" CharacterSpacing="1.5"/>
         </VerticalStackLayout>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" x:Name="RecentScroll">
             <VerticalStackLayout x:Name="RecentList" Padding="6,0" Spacing="2"/>
         </ScrollView>
 

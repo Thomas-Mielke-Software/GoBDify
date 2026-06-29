@@ -39,7 +39,7 @@ Voraussetzung für GoBD-Konformität ist allerdings, dass man die Dokumente zeit
   parallel bei drei unabhängigen Zertifizierungsstellen beglaubigt, so dass
   die Beweiskraft auch beim Ausfall oder Kompromittieren eines Anbieters
   erhalten bleibt.
-- **Flyout-Navigation** mit Schnellzugriff auf zuletzt benutzte Verzeichnisse.
+- **Flyout-Navigation** mit Schnellzugriff auf zuletzt benutzte Verzeichnisse, deren Sortierung per drag&drop und Import/Export der Verzeichnisliste von/in eine Textdatei.
 - **Abbrechbare Verarbeitung** mit Cancellation-Token.
 - **CLI-Tool** `gobdify` für Skripting und CI/CD-Audits auf MacOS und Linux.
 - **Standardkonform**: Die `.sha256`-Dateien sind kompatibel mit `sha256sum -c`,
@@ -165,10 +165,10 @@ ein Minimalbeispiel angeben.
 ## Zukünftige Planung (Milestones)
 
 In dieser Reihenfolge:
+- Gtk-App für Linux (siehe https://mauigtk.net und den feature/linux-gtk4 branch)
 - MacOS App mit Notariserung auch des MacOS-CLI-Tools
 - Android-App
 - iOS-App
-- Gtk-App für Linux (siehe https://mauigtk.net)
 - Gtk-App für mobile Linux (mit libadwaita)
 
 ## Lizenz

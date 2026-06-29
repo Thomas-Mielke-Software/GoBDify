@@ -27,7 +27,7 @@
 		<ApplicationId>software.mielke.gobdify</ApplicationId>
 
 		<!-- Versions — Single Source of Truth ist <Version> -->
-		<Version>1.3.1</Version>
+		<Version>1.4.0</Version>
 		<ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
 		<ApplicationVersion>5</ApplicationVersion>
 
