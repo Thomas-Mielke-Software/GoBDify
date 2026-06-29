@@ -16,6 +16,11 @@ public static class MauiProgram
             .UseMauiAppLinuxGtk4<App>()
             .AddLinuxGtk4Essentials();
 
+        // Eigener Shell-Handler: rendert die Ordnerverwaltung in den Flyout, den das
+        // GTK4-Backend sonst nur als Item-Liste (Übersicht/Einstellungen) zeichnet.
+        builder.ConfigureMauiHandlers(handlers =>
+            handlers.AddHandler<Microsoft.Maui.Controls.Shell, Platform.FolderFlyoutShellHandler>());
+
         builder.ConfigureFonts(fonts =>
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

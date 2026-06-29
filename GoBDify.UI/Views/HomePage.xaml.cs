@@ -9,10 +9,6 @@ public partial class HomePage : ContentPage
     private readonly WorkspaceService _workspace;
     private bool _running;
     private CancellationTokenSource? _cts;
-    private string? _dragPath;
-    private BoxView? _gapSpacer;
-    private double _gapBase;
-    private int _gapVersion;
 
     // live UI controllers keyed by ChainIndex from events
     private readonly Dictionary<int, ChainCard> _cards = new();
@@ -30,16 +26,9 @@ public partial class HomePage : ContentPage
             await RunAuditAsync();
         };
 
-        // GTK4 rendert Shell.FlyoutContentTemplate (FlyoutContent) nicht — dort
-        // läge die Ordnerverwaltung. Auf solchen Plattformen blenden wir sie hier
-        // auf der Seite ein. Windows behält den Flyout und bleibt unverändert.
-        if (OperatingSystem.IsLinux())
-        {
-            FolderBar.IsVisible = true;
-            _workspace.RecentFolders.CollectionChanged += (_, __) => RenderHomeFolders();
-            _workspace.CurrentFolderChanged += (_, __) => RenderHomeFolders();
-            RenderHomeFolders();
-        }
+        // Auf Linux/GTK liegt die Ordnerverwaltung im linken Flyout (eigener
+        // FolderFlyoutShellHandler im Linux-Head). Die seiten-interne FolderBar
+        // bleibt daher ausgeblendet; Windows behält seinen Flyout unverändert.
     }
 
     protected override async void OnAppearing()
@@ -48,10 +37,9 @@ public partial class HomePage : ContentPage
         UpdateHeader();
         if (string.IsNullOrEmpty(_workspace.CurrentFolder))
         {
-            // Auf GTK ist der Flyout-Inhalt nicht verfügbar; die Auswahl läuft über
-            // die FolderBar auf der Seite. Sonst den Flyout zur Auswahl öffnen.
-            if (!OperatingSystem.IsLinux())
-                Shell.Current.FlyoutIsPresented = true;
+            // Ohne Ordner den Flyout zur Auswahl öffnen (auf Linux enthält er jetzt
+            // die Ordnerverwaltung, auf Windows den FlyoutContent).
+            Shell.Current.FlyoutIsPresented = true;
             return;
         }
         if (!_running && ChainContainer.Children.Count == 0)
@@ -203,228 +191,6 @@ public partial class HomePage : ContentPage
         {
             await DisplayAlert("Fehler", ex.Message, "OK");
         }
-    }
-
-    // --- Ordnerverwaltung auf der Seite (nur GTK/Linux, siehe Konstruktor) ---
-
-    private async void OnPickFolderClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            await _workspace.PickFolderAsync(_workspace.CurrentFolder);
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Fehler", ex.Message, "OK");
-        }
-    }
-
-    private async void OnExportFoldersClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            if (_workspace.RecentFolders.Count == 0)
-            {
-                await DisplayAlert("Export", "Keine Ordner zum Exportieren vorhanden.", "OK");
-                return;
-            }
-            var path = await _workspace.ExportRecentFoldersAsync();
-            if (path != null)
-                await DisplayAlert("Export", $"Ordnerliste gespeichert:\n{path}", "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Fehler", ex.Message, "OK");
-        }
-    }
-
-    private async void OnImportFoldersClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            var choice = await DisplayActionSheet(
-                "Ordnerliste importieren", "Abbrechen", null,
-                "Bestehende ersetzen", "Zusammenführen");
-            var mode = choice switch
-            {
-                "Bestehende ersetzen" => (ImportMode?)ImportMode.Replace,
-                "Zusammenführen"      => ImportMode.Merge,
-                _                     => null
-            };
-            if (mode is null) return;
-
-            var result = await _workspace.ImportRecentFoldersAsync(mode.Value);
-            if (result is null) return; // Datei-Dialog abgebrochen
-
-            await DisplayAlert("Import", WorkspaceService.DescribeImportResult(result, mode.Value), "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Fehler", ex.Message, "OK");
-        }
-    }
-
-    private void RenderHomeFolders()
-    {
-        if (HomeRecentList is null) return;
-        HomeRecentList.Children.Clear();
-
-        if (_workspace.RecentFolders.Count == 0)
-        {
-            HomeRecentList.Children.Add(new Label
-            {
-                Text = "Noch kein Ordner gewählt.",
-                FontSize = 12,
-                TextColor = Color.FromArgb("#6B7280")
-            });
-            return;
-        }
-
-        var titles = FolderDisplay.DisambiguateTitles(_workspace.RecentFolders);
-        foreach (var folder in _workspace.RecentFolders)
-        {
-            var path = folder;
-            bool active = string.Equals(path, _workspace.CurrentFolder, StringComparison.OrdinalIgnoreCase);
-
-            // Buttons statt TapGestureRecognizer: das GTK4-Backend liefert Taps auf
-            // (transparente) Layouts nicht zuverlässig — Buttons hingegen schon.
-            var open = new Button
-            {
-                Text = titles.TryGetValue(path, out var t) ? t : ShortName(path),
-                FontSize = 14,
-                FontAttributes = active ? FontAttributes.Bold : FontAttributes.None,
-                TextColor = active ? Colors.White : Color.FromArgb("#111827"),
-                BackgroundColor = active ? Color.FromArgb("#5d76dd") : Color.FromArgb("#F3F4F6"),
-                Padding = new Thickness(12, 8),
-                CornerRadius = 6,
-                HorizontalOptions = LayoutOptions.Fill
-            };
-            open.Clicked += (_, __) => _workspace.CurrentFolder = path;
-
-            var remove = new Button
-            {
-                Text = "✕",
-                FontSize = 13,
-                WidthRequest = 40,
-                Padding = 0,
-                CornerRadius = 6,
-                TextColor = Color.FromArgb("#6B7280"),
-                BackgroundColor = Color.FromArgb("#F3F4F6")
-            };
-            remove.Clicked += (_, __) => _workspace.RemoveRecent(path);
-
-            var grid = new Grid
-            {
-                ColumnDefinitions = new ColumnDefinitionCollection(
-                    new ColumnDefinition(GridLength.Star),
-                    new ColumnDefinition(GridLength.Auto)),
-                ColumnSpacing = 6
-            };
-            grid.Add(open, 0, 0);
-            grid.Add(remove, 1, 0);
-
-            // Spacer für die animierte Einfügelücke (siehe OpenGap/CloseGap).
-            var spacer = new BoxView { HeightRequest = 0, Color = Colors.Transparent };
-            var rowContainer = new VerticalStackLayout { Spacing = 0, Children = { spacer, grid } };
-
-            // Drag&Drop-Sortierung (best effort — abhängig vom GTK4-Backend).
-            var drag = new DragGestureRecognizer { CanDrag = true };
-            drag.DragStarting += (_, __) =>
-            {
-                _dragPath = path;
-                Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(40), () =>
-                {
-                    if (_dragPath == path) rowContainer.IsVisible = false;
-                });
-            };
-            drag.DropCompleted += (_, __) => { rowContainer.IsVisible = true; _dragPath = null; CloseGap(); };
-            rowContainer.GestureRecognizers.Add(drag);
-
-            var drop = new DropGestureRecognizer { AllowDrop = true };
-            drop.DragOver += (_, e) =>
-            {
-                e.AcceptedOperation = DataPackageOperation.Copy;
-                DragDropHelper.SetMoveVisual(e);
-                if (_dragPath == null || _dragPath == path) { CloseGap(); return; }
-                OpenGap(spacer);
-            };
-            drop.DragLeave += (_, __) => CloseGap();
-            drop.Drop += (_, __) =>
-            {
-                CloseGap();
-                if (_dragPath != null && _dragPath != path)
-                    _workspace.MoveRecentBefore(_dragPath, path);
-                _dragPath = null;
-            };
-            rowContainer.GestureRecognizers.Add(drop);
-
-            HomeRecentList.Children.Add(rowContainer);
-        }
-
-        // Drop-Zone unter dem letzten Eintrag, um ans Listenende zu verschieben.
-        if (_workspace.RecentFolders.Count > 0)
-            HomeRecentList.Children.Add(BuildEndDropZone());
-    }
-
-    private View BuildEndDropZone()
-    {
-        var endSpacer = new BoxView { HeightRequest = EndZoneBase, Color = Colors.Transparent };
-        var drop = new DropGestureRecognizer { AllowDrop = true };
-        drop.DragOver += (_, e) =>
-        {
-            e.AcceptedOperation = DataPackageOperation.Copy;
-            DragDropHelper.SetMoveVisual(e);
-            if (_dragPath == null) { CloseGap(); return; }
-            OpenGap(endSpacer, EndZoneBase);
-        };
-        drop.DragLeave += (_, __) => CloseGap();
-        drop.Drop += (_, __) =>
-        {
-            CloseGap();
-            if (_dragPath != null) _workspace.MoveRecentToEnd(_dragPath);
-            _dragPath = null;
-        };
-        endSpacer.GestureRecognizers.Add(drop);
-        return endSpacer;
-    }
-
-    private static string ShortName(string path)
-    {
-        try { return new DirectoryInfo(path).Name; } catch { return path; }
-    }
-
-    // Drag-over: innerhalb der überfahrenen Zeile Platz schaffen (animiert).
-    private const double DropGap = 44;
-    private const double EndZoneBase = 24;
-
-    private void OpenGap(BoxView spacer, double baseHeight = 0)
-    {
-        if (ReferenceEquals(_gapSpacer, spacer)) return;
-        CloseGap();
-        _gapSpacer = spacer;
-        _gapBase = baseHeight;
-        int v = ++_gapVersion;
-        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(60), () =>
-        {
-            if (v != _gapVersion || !ReferenceEquals(_gapSpacer, spacer)) return;
-            AnimateGap(spacer, baseHeight + DropGap, Easing.CubicOut, 180);
-        });
-    }
-
-    private void CloseGap()
-    {
-        _gapVersion++;
-        var spacer = _gapSpacer;
-        var bas = _gapBase;
-        _gapSpacer = null;
-        if (spacer != null) AnimateGap(spacer, bas, Easing.CubicIn, 140);
-    }
-
-    private static void AnimateGap(BoxView spacer, double to, Easing easing, uint length)
-    {
-        spacer.AbortAnimation("gap");
-        double from = spacer.HeightRequest < 0 ? 0 : spacer.HeightRequest;
-        new Animation(h => spacer.HeightRequest = h, from, to, easing).Commit(spacer, "gap", length: length);
     }
 
     private void HandleCancelled()

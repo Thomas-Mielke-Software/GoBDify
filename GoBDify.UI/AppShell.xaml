@@ -25,6 +25,7 @@
     </Shell.FlyoutContentTemplate>
 
     <ShellContent
+        x:Name="HomeShellContent"
         Title="Übersicht"
         Route="home"
         ContentTemplate="{DataTemplate views:HomePage}" />
