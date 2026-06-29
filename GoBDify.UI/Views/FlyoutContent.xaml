@@ -7,7 +7,7 @@
             <Label Text="ARBEITSVERZEICHNISSE" FontSize="10" TextColor="#9CA3AF" CharacterSpacing="1.5"/>
         </VerticalStackLayout>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" x:Name="RecentScroll">
             <VerticalStackLayout x:Name="RecentList" Padding="6,0" Spacing="2"/>
         </ScrollView>
 
@@ -16,6 +16,16 @@
                     Clicked="OnAddFolderClicked"
                     BackgroundColor="#5d76dd" TextColor="White"
                     HorizontalOptions="Fill" HeightRequest="42"/>
+            <Button Text="📄  Ordnerliste exportieren"
+                    Clicked="OnExportFoldersClicked"
+                    BackgroundColor="Transparent" TextColor="#E5E7EB"
+                    BorderColor="#374151" BorderWidth="1"
+                    HorizontalOptions="Fill" HeightRequest="40"/>
+            <Button Text="📥  Ordnerliste importieren"
+                    Clicked="OnImportFoldersClicked"
+                    BackgroundColor="Transparent" TextColor="#E5E7EB"
+                    BorderColor="#374151" BorderWidth="1"
+                    HorizontalOptions="Fill" HeightRequest="40"/>
             <Button Text="⚙  Einstellungen"
                     Clicked="OnSettingsClicked"
                     BackgroundColor="Transparent" TextColor="#E5E7EB"

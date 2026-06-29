@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<!--TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks-->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 
@@ -27,7 +27,7 @@
 		<ApplicationId>software.mielke.gobdify</ApplicationId>
 
 		<!-- Versions — Single Source of Truth ist <Version> -->
-		<Version>1.4.2</Version>
+		<Version>1.5.0</Version>
 		<ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
 		<ApplicationVersion>8</ApplicationVersion>
 
@@ -66,18 +66,12 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
-	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <Debugger>Xamarin</Debugger>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidSigningStorePass>dschunkelbuch</AndroidSigningStorePass>
-	  <AndroidSigningKeyAlias>thomiel</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>dschunkelbuch</AndroidSigningKeyPass>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	</PropertyGroup>
 
@@ -122,7 +116,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\GoBDify.Core\GoBDify.Core.csproj" />
+		<ProjectReference Include="..\GoBDify.UI\GoBDify.UI.csproj" />
 	</ItemGroup>
 
 	<!-- Hält Package.appxmanifest in Sync mit $(Version): die <Identity Version="..."/> wird vor dem Windows-Build aus $(Version).0 gesetzt. -->

@@ -96,6 +96,32 @@
 
         <ScrollView Grid.Row="2" x:Name="MainScroll" Padding="20,10">
             <VerticalStackLayout Spacing="10">
+
+                <!-- Ordnerverwaltung auf der Seite — nur dort eingeblendet, wo der
+                     Shell-Flyout (FlyoutContent) nicht gerendert wird (GTK/Linux). -->
+                <Border x:Name="FolderBar" IsVisible="False" Padding="14"
+                        StrokeThickness="1" Stroke="#D1D5DB" BackgroundColor="White">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="10"/></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="Arbeitsordner" FontSize="15"
+                                   FontAttributes="Bold" TextColor="#111827" VerticalOptions="Center"/>
+                            <Button Grid.Column="1" Text="Ordner wählen"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Clicked="OnPickFolderClicked"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0" Text="Liste exportieren"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnExportFoldersClicked"/>
+                            <Button Grid.Column="1" Text="Liste importieren"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Clicked="OnImportFoldersClicked"/>
+                        </Grid>
+                        <VerticalStackLayout x:Name="HomeRecentList" Spacing="4"/>
+                    </VerticalStackLayout>
+                </Border>
+
                 <Label x:Name="StatusLabel" Text="" FontSize="12" TextColor="#6B7280"/>
 
                 <Border x:Name="PermissionBorder" IsVisible="False"

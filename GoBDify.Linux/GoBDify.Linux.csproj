@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <UseMaui>true</UseMaui>
+    <SingleProject>false</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Namespace GoBDify, damit App/AppShell aus GoBDify.UI direkt passen. -->
+    <RootNamespace>GoBDify</RootNamespace>
+    <ApplicationTitle>GoBDify</ApplicationTitle>
+    <ApplicationId>software.mielke.gobdify</ApplicationId>
+    <Version>1.5.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- GTK4-Backend + Essentials von nuget.org (öffentlich). -->
+    <PackageReference Include="Platform.Maui.Linux.Gtk4" Version="0.6.0" />
+    <PackageReference Include="Platform.Maui.Linux.Gtk4.Essentials" Version="0.6.0" />
+    <ProjectReference Include="..\GoBDify.UI\GoBDify.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiFont Include="Resources\Fonts\*" />
+  </ItemGroup>
+
+</Project>

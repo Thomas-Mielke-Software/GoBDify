@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseMaui>true</UseMaui>
+    <SingleProject>false</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Namespace bleibt GoBDify, damit x:Class/clr-namespace unverändert gültig sind. -->
+    <RootNamespace>GoBDify</RootNamespace>
+    <Version>1.4.0</Version>
+  </PropertyGroup>
+
+  <!-- Geteilte UI: rein plattformneutral. Alle Plattform-Spezifika (Folder-Picker,
+       Windows FutureAccessList, GTK FileDialog) liegen hinter IFolderPicker in den Heads. -->
+  <ItemGroup>
+    <!-- net8+ verlangt die explizite Controls-Referenz trotz UseMaui (MA002). -->
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <ProjectReference Include="..\GoBDify.Core\GoBDify.Core.csproj" />
+  </ItemGroup>
+
+</Project>
