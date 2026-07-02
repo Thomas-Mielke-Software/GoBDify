@@ -201,18 +201,21 @@ public sealed class FlyoutFolderPanel : ContentView
         if (page == null) return;
         try
         {
-            // DisplayActionSheet ist auf dem GTK4-Backend defekt (siehe HomePage) —
-            // deshalb ein Zwei-Knopf-Dialog. Abbrechen über den Datei-Dialog.
-            bool replace = await page.DisplayAlert(
-                "Ordnerliste importieren",
-                "Soll die bestehende Liste ersetzt oder die importierte Liste mit ihr zusammengeführt werden?",
-                "Ersetzen", "Zusammenführen");
-            var mode = replace ? ImportMode.Replace : ImportMode.Merge;
+            var choice = await page.DisplayActionSheet(
+                "Ordnerliste importieren", "Abbrechen", null,
+                "Bestehende ersetzen", "Zusammenführen");
+            var mode = choice switch
+            {
+                "Bestehende ersetzen" => (ImportMode?)ImportMode.Replace,
+                "Zusammenführen"      => ImportMode.Merge,
+                _                     => null
+            };
+            if (mode is null) return;
 
-            var result = await _workspace.ImportRecentFoldersAsync(mode);
+            var result = await _workspace.ImportRecentFoldersAsync(mode.Value);
             if (result is null) return;
 
-            await page.DisplayAlert("Import", WorkspaceService.DescribeImportResult(result, mode), "OK");
+            await page.DisplayAlert("Import", WorkspaceService.DescribeImportResult(result, mode.Value), "OK");
         }
         catch (Exception ex)
         {

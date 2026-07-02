@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Dispatching;
 using Microsoft.Maui.Hosting;
-using Platform.Maui.Linux.Gtk4.Hosting;
-using Platform.Maui.Linux.Gtk4.Essentials.Hosting;
+using Microsoft.Maui.Platforms.Linux.Gtk4.Hosting;
+using Microsoft.Maui.Platforms.Linux.Gtk4.Essentials.Hosting;
 using GoBDify.Services;
 
 namespace GoBDify;

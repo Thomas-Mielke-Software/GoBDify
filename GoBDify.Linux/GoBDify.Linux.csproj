@@ -15,9 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- GTK4-Backend + Essentials von nuget.org (öffentlich). -->
-    <PackageReference Include="Platform.Maui.Linux.Gtk4" Version="0.6.0" />
-    <PackageReference Include="Platform.Maui.Linux.Gtk4.Essentials" Version="0.6.0" />
+    <!-- GTK4-Backend + Essentials aus dotnet/maui-labs. Der frühere Redth-Fork
+         (Platform.Maui.Linux.Gtk4) ist eingestellt und ins offizielle maui-labs
+         übergegangen. Bis maui-labs offiziell auf nuget.org veröffentlicht,
+         beziehen wir das CI-Artefakt aus PR #359 über den lokalen Feed (localfeed).
+         Enthält den DisplayActionSheet-Fix (WhereArrayIterator→string[]-Cast). -->
+    <PackageReference Include="Microsoft.Maui.Platforms.Linux.Gtk4" Version="0.1.0-ci.510.1" />
+    <PackageReference Include="Microsoft.Maui.Platforms.Linux.Gtk4.Essentials" Version="0.1.0-ci.510.1" />
+    <!-- Das maui-labs-Backend verlangt Microsoft.Maui.Controls >= 10.0.41; die
+         geteilte GoBDify.UI referenziert $(MauiVersion) (10.0.31). Hier im Head
+         explizit anheben, damit kein NU1605-Downgrade entsteht. Windows unberührt. -->
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
     <ProjectReference Include="..\GoBDify.UI\GoBDify.UI.csproj" />
   </ItemGroup>
 

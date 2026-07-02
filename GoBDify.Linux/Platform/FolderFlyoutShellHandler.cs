@@ -3,7 +3,7 @@ using GoBDify.Views;
 using Gtk;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Platform;
-using Platform.Maui.Linux.Gtk4.Handlers;
+using Microsoft.Maui.Platforms.Linux.Gtk4.Handlers;
 
 namespace GoBDify.Platform;
 

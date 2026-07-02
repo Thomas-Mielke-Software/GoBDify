@@ -35,3 +35,9 @@ GoBDify/GoBDify.csproj.user
 /GoBDify/publizieren.bat
 /GoBDify.Cli/publizieren.bat
 /GoBDify.Cli/publizieren-cli.bat
+
+# Rohes CI-Artefakt aus maui-labs PR #359 (nur Download-Zwischenablage) —
+# die benötigten nupkgs liegen extrahiert in localfeed/.
+/packages-linux-gtk4-ubuntu-24.04/
+# Verwaiste Screenshot-Ablage (Tippfehler-Ordner)
+/screensots/
