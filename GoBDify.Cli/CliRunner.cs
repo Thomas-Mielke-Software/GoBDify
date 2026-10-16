@@ -114,6 +114,8 @@ internal static class CliRunner
             }
             if (c.Timestamps.Count == 0)
                 Console.WriteLine("  FEHLT: Kein Zeitstempel (.tst) zu dieser .sha256 vorhanden!");
+            if (c.MissingTimestampSuffixes.Count > 0)
+                Console.WriteLine($"  FEHLT: Unvollständiger Zeitstempel-Satz, fehlende Token: {string.Join(", ", c.MissingTimestampSuffixes.Select(s => $"_{s}"))}");
             foreach (var f in c.Files)
             {
                 string tag = f.Status switch
@@ -125,6 +127,11 @@ internal static class CliRunner
                 };
                 Console.WriteLine($"    {tag}  {f.FileName}");
             }
+        }
+        if (a.MissingChainNumbers.Count > 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"FEHLT: Lücke(n) in der Kettennummerierung: {string.Join(", ", a.MissingChainNumbers.Select(n => $"timestamp{n:D5}.sha256"))}");
         }
         if (a.NewFiles.Count > 0)
         {

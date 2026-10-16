@@ -221,6 +221,67 @@ public class ChainProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task Audit_erkennt_Luecke_in_der_Kettennummerierung()
+    {
+        WriteFile("a.txt", "a");
+        WriteFile("c.txt", "c");
+        WriteShaFile(1, new[] { ("a.txt", Sha256Hex("a")) });
+        WriteShaFile(3, new[] { ("c.txt", Sha256Hex("c")) }); // timestamp00002 fehlt
+
+        var report = await new ChainProcessor().AuditAsync(_dir);
+
+        Assert.Null(report.Error);
+        Assert.Equal(3, report.LastChainNumber);
+        Assert.Equal(new[] { 2 }, report.MissingChainNumbers);
+        Assert.True(report.HasIssues);
+    }
+
+    [Fact]
+    public async Task Audit_lueckenlose_Nummerierung_meldet_keine_Luecke()
+    {
+        WriteFile("a.txt", "a");
+        WriteFile("b.txt", "b");
+        WriteShaFile(1, new[] { ("a.txt", Sha256Hex("a")) });
+        WriteShaFile(2, new[] { ("b.txt", Sha256Hex("b")) });
+
+        var report = await new ChainProcessor().AuditAsync(_dir);
+
+        Assert.Empty(report.MissingChainNumbers);
+    }
+
+    [Fact]
+    public void MissingTimestampSuffixes_erkennt_Luecke_im_Paranoia_Satz()
+    {
+        var entry = new ChainEntry(1, "timestamp00001.sha256",
+            Array.Empty<FileEntry>(),
+            new[]
+            {
+                new TimestampTokenInfo("a", "timestamp00001_a.sha256.tst", TimestampStatus.Valid, null, null, null),
+                new TimestampTokenInfo("c", "timestamp00001_c.sha256.tst", TimestampStatus.Valid, null, null, null),
+            });
+
+        Assert.Equal(new[] { 'b' }, entry.MissingTimestampSuffixes);
+    }
+
+    [Fact]
+    public void MissingTimestampSuffixes_leer_bei_vollstaendigem_Satz_und_bei_Legacy_Token()
+    {
+        var full = new ChainEntry(1, "x", Array.Empty<FileEntry>(), new[]
+        {
+            new TimestampTokenInfo("a", "", TimestampStatus.Valid, null, null, null),
+            new TimestampTokenInfo("b", "", TimestampStatus.Valid, null, null, null),
+            new TimestampTokenInfo("c", "", TimestampStatus.Valid, null, null, null),
+        });
+        Assert.Empty(full.MissingTimestampSuffixes);
+
+        var legacy = new ChainEntry(1, "x", Array.Empty<FileEntry>(), new[]
+        {
+            new TimestampTokenInfo("", "", TimestampStatus.Valid, null, null, null),
+        });
+        Assert.Empty(legacy.MissingTimestampSuffixes);
+    }
+
+    [Fact]
     public void IsChainArtifact_erkennt_alle_Varianten()
     {
         Assert.True(ChainProcessor.IsChainArtifact("timestamp00001.sha256"));

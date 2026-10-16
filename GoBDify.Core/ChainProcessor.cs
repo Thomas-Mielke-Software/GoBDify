@@ -43,12 +43,14 @@ public class ChainProcessor
         // 1) Pre-discover all skeletons (parse .sha256 file lists, locate .tst siblings) without hashing
         var skeletons = new List<ChainSkeleton>();
         int last = 0;
+        var presentNumbers = new HashSet<int>();
         var referenced = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         for (int idx = 0; idx < sha256Files.Count; idx++)
         {
             var sha = sha256Files[idx];
             int n = int.Parse(Sha256Re.Match(sha.Name).Groups[1].Value);
             if (n > last) last = n;
+            presentNumbers.Add(n);
 
             var entries = new List<(string, string)>();
             using (var fs = sha.OpenRead())
@@ -136,8 +138,16 @@ public class ChainProcessor
             .OrderBy(n => n)
             .ToList();
 
+        // Lücken in der Kettennummerierung (1..last) aufspüren.
+        var missingNumbers = new List<int>();
+        for (int n = 1; n < last; n++)
+            if (!presentNumbers.Contains(n)) missingNumbers.Add(n);
+
         events?.Report(new AuditCompleted(newFiles));
-        return new AuditReport(folderPath, chain, newFiles, last, null);
+        return new AuditReport(folderPath, chain, newFiles, last, null)
+        {
+            MissingChainNumbers = missingNumbers,
+        };
     }
 
     private TimestampTokenInfo VerifyTstFile(FileInfo tst, string suffix, byte[] metaHashBytes)

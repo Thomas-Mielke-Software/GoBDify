@@ -322,6 +322,8 @@ public partial class HomePage : ContentPage
             NewFilesHeadline.Text = report.NewFiles.Count == 1
                 ? "Neue, noch nicht getimestampte Datei"
                 : "Neue, noch nicht getimestampte Dateien";
+            if (report.MissingChainNumbers.Count > 0)
+                NewFilesHeadline.Text += " – oder Dateien, die durch die Lücke(n) verwaist sind";
             NewFilesList.Children.Clear();
             foreach (var f in report.NewFiles)
                 NewFilesList.Children.Add(new Label { Text = "• " + f, FontSize = 13, TextColor = Color.FromArgb("#92400E") });
@@ -384,6 +386,9 @@ public partial class HomePage : ContentPage
         int modified = report.Chain.Sum(c => c.Files.Count(f => f.Status == FileVerificationStatus.Modified));
         int missing  = report.Chain.Sum(c => c.Files.Count(f => f.Status == FileVerificationStatus.Missing));
         int badTs    = report.Chain.Sum(c => c.Timestamps.Count(t => t.Status != TimestampStatus.Valid));
+        int gaps     = report.MissingChainNumbers.Count;                         // fehlende Kettenglieder
+        int noTs     = report.Chain.Count(c => c.Timestamps.Count == 0);         // .sha256 ohne jeden Timestamp
+        int partialTs = report.Chain.Count(c => c.MissingTimestampSuffixes.Count > 0); // unvollständiger Paranoia-Satz
         int totalFiles = report.Chain.Sum(c => c.Files.Count);
         int newCount = report.NewFiles.Count;
 
@@ -405,7 +410,7 @@ public partial class HomePage : ContentPage
             return;
         }
 
-        bool problems = modified > 0 || missing > 0 || badTs > 0;
+        bool problems = modified > 0 || missing > 0 || badTs > 0 || gaps > 0 || noTs > 0 || partialTs > 0;
 
         // Erstbeglaubigung (Kette war leer, jetzt erster Timestamp erzeugt)
         if (report.Chain.Count == 0 && newTimestamp?.NewChainNumber.HasValue == true)
@@ -451,16 +456,25 @@ public partial class HomePage : ContentPage
             if (modified > 0) parts.Add(modified == 1 ? "1 Datei verändert" : $"{modified} Dateien verändert");
             if (missing  > 0) parts.Add(missing  == 1 ? "1 Datei fehlt"     : $"{missing} Dateien fehlen");
             if (badTs    > 0) parts.Add(badTs    == 1 ? "1 ungültiger Timestamp" : $"{badTs} ungültige Timestamps");
+            if (gaps     > 0) parts.Add(gaps     == 1 ? "1 Kettenglied fehlt" : $"{gaps} Kettenglieder fehlen");
+            if (noTs     > 0) parts.Add(noTs     == 1 ? "1 .sha256 ohne Timestamp" : $"{noTs} .sha256 ohne Timestamp");
+            if (partialTs > 0) parts.Add(partialTs == 1 ? "1 unvollständiger Timestamp-Satz" : $"{partialTs} unvollständige Timestamp-Sätze");
             SummaryHeadline.Text = "Historie verletzt — " + string.Join(", ", parts);
 
-            string detail;
+            var detail = new List<string>();
+            if (gaps > 0)
+                detail.Add($"Fehlende Kettenglieder: {string.Join(", ", report.MissingChainNumbers.Select(n => $"timestamp{n:D5}.sha256"))}.");
+            if (noTs > 0)
+                detail.Add(noTs == 1
+                    ? "Zu einer .sha256 fehlt der Zeitstempel (.tst) ganz."
+                    : $"Zu {noTs} .sha256-Dateien fehlt der Zeitstempel (.tst) ganz.");
+            if (partialTs > 0)
+                detail.Add("Mindestens ein Paranoia-Timestamp-Satz ist unvollständig (ein .tst-Token fehlt).");
             if (affectedChains.Count == 1)
-                detail = $"Veränderungen seit Beglaubigung durch {affectedChains[0].Sha256FileName} wurden erkannt.";
+                detail.Add($"Veränderungen seit Beglaubigung durch {affectedChains[0].Sha256FileName} wurden erkannt.");
             else if (affectedChains.Count > 1)
-                detail = "Veränderungen seit Beglaubigung wurden erkannt.";
-            else
-                detail = "Veränderungen erkannt.";
-            SummaryDetail.Text = $"{Files(totalFiles)} in {Timestamps(report.Chain.Count)} geprüft. " + detail;
+                detail.Add("Veränderungen seit Beglaubigung wurden erkannt.");
+            SummaryDetail.Text = $"{Files(totalFiles)} in {Timestamps(report.Chain.Count)} geprüft. " + string.Join(" ", detail);
         }
         else if (newTimestamp?.NewChainNumber.HasValue == true)
         {
