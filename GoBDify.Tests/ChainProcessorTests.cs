@@ -179,6 +179,48 @@ public class ChainProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task Audit_sha256_ohne_tst_wird_als_Problem_gemeldet()
+    {
+        // Eine .sha256 ohne zugehörige .tst (z. B. nach einer gescheiterten Timestamp-Anfrage)
+        // muss als Problem gelten — auch wenn alle Dateien unverändert sind.
+        WriteFile("a.txt", "hello");
+        WriteShaFile(1, new[] { ("a.txt", Sha256Hex("hello")) });
+
+        var report = await new ChainProcessor().AuditAsync(_dir);
+
+        Assert.Null(report.Error);
+        Assert.All(report.Chain[0].Files, f => Assert.Equal(FileVerificationStatus.Ok, f.Status));
+        Assert.Empty(report.Chain[0].Timestamps);
+        Assert.True(report.HasIssues);
+    }
+
+    [Fact]
+    public async Task Timestamp_laesst_bei_TSA_Fehler_keine_verwaiste_sha256_zurueck()
+    {
+        WriteFile("neu.pdf", "inhalt");
+        var settings = new AppSettings { ParanoiaMode = false, SelectedTsaIds = new List<string> { "freetsa" } };
+        var processor = new ChainProcessor(new FailingTimestampingService());
+
+        var result = await processor.AuditAndTimestampAsync(_dir, settings);
+
+        Assert.NotNull(result.Audit.Error);
+        Assert.Null(result.NewChainNumber);
+        // Kette darf NICHT geschrieben worden sein — sonst bliebe eine .sha256 ohne .tst zurück.
+        Assert.Empty(Directory.GetFiles(_dir, "*.sha256"));
+        Assert.Empty(Directory.GetFiles(_dir, "*.tst"));
+    }
+
+    private sealed class FailingTimestampingService : TimestampingService
+    {
+        public override Task<IReadOnlyList<TimestampResult>> RequestManyAsync(
+            IEnumerable<TimestampAuthority> authorities,
+            byte[] hash,
+            HashAlgorithmName hashAlgorithmName,
+            CancellationToken cancellationToken = default)
+            => throw new HttpRequestException("Netzwerk nicht erreichbar (Test)");
+    }
+
+    [Fact]
     public void IsChainArtifact_erkennt_alle_Varianten()
     {
         Assert.True(ChainProcessor.IsChainArtifact("timestamp00001.sha256"));

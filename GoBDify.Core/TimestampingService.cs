@@ -50,7 +50,7 @@ public class TimestampingService
         return new TimestampResult(authority, token, respBytes);
     }
 
-    public async Task<IReadOnlyList<TimestampResult>> RequestManyAsync(
+    public virtual async Task<IReadOnlyList<TimestampResult>> RequestManyAsync(
         IEnumerable<TimestampAuthority> authorities,
         byte[] hash,
         HashAlgorithmName hashAlgorithmName,

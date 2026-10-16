@@ -215,15 +215,34 @@ public class ChainProcessor
             events?.Report(new NewFileHashCompleted(newIdx, fname, hash));
         }
 
+        // Hash in-memory über exakt die Bytes, die wir später schreiben werden
+        // (UTF-8 ohne BOM, wie File.WriteAllBytes sie ablegt).
+        byte[] sha256Bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        byte[] metaHashBytes = SHA256.HashData(sha256Bytes);
+
+        // RFC3161-Anfrage(n) ZUERST — erst bei Erfolg schreiben wir .sha256 und .tst.
+        // So bleibt bei einem Netzwerk-/TSA-Fehler keine verwaiste .sha256 ohne Zeitstempel
+        // zurück (die ein späteres Audit sonst nicht als Problem erkennen würde).
+        IReadOnlyList<TimestampResult> results;
+        try
+        {
+            results = await _ts.RequestManyAsync(authorities, metaHashBytes, HashAlgorithmName.SHA256, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return new ChainResult(
+                audit with { Error = $"Zeitstempel-Anfrage fehlgeschlagen; keine Dateien geschrieben: {ex.Message}" },
+                null, null);
+        }
+
         string sha256Path = Path.Combine(folderPath, sha256Name);
-        File.WriteAllText(sha256Path, sb.ToString());
+        File.WriteAllBytes(sha256Path, sha256Bytes);
         progress?.Report(new ProgressInfo(0.9, $"Erstellt: {sha256Name}"));
 
-        // Hash + RFC3161 request(s)
-        string metaHash = await HashFileHexAsync(sha256Path, cancellationToken);
-        byte[] metaHashBytes = Convert.FromHexString(metaHash);
-
-        var results = await _ts.RequestManyAsync(authorities, metaHashBytes, HashAlgorithmName.SHA256, cancellationToken);
         var tokens = new List<TimestampTokenInfo>();
         for (int i = 0; i < results.Count; i++)
         {

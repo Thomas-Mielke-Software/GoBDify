@@ -68,7 +68,7 @@ internal static class CliRunner
         {
             var audit = await processor.AuditAsync(folder, progress);
             PrintAudit(audit);
-            return audit.Error != null ? 4 : (HasIssues(audit) ? 5 : 0);
+            return audit.Error != null ? 4 : (audit.HasIssues ? 5 : 0);
         }
         else
         {
@@ -91,14 +91,9 @@ internal static class CliRunner
                 Console.WriteLine();
                 Console.WriteLine("KEINE NEUEN DATEIEN. Kein neuer Timestamp.");
             }
-            return HasIssues(result.Audit) ? 5 : 0;
+            return result.Audit.HasIssues ? 5 : 0;
         }
     }
-
-    private static bool HasIssues(AuditReport a) =>
-        a.Chain.Any(c =>
-            c.Files.Any(f => f.Status is FileVerificationStatus.Modified or FileVerificationStatus.Missing)
-            || c.Timestamps.Any(t => t.Status != TimestampStatus.Valid));
 
     private static void PrintAudit(AuditReport a)
     {
@@ -117,6 +112,8 @@ internal static class CliRunner
                 };
                 Console.WriteLine($"  Timestamp {t.TstFileName}: {status}  {t.Timestamp:u}  {t.IssuerName}{(t.Error != null ? $"  ({t.Error})" : "")}");
             }
+            if (c.Timestamps.Count == 0)
+                Console.WriteLine("  FEHLT: Kein Zeitstempel (.tst) zu dieser .sha256 vorhanden!");
             foreach (var f in c.Files)
             {
                 string tag = f.Status switch
