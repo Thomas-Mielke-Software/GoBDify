@@ -149,6 +149,11 @@ dotnet test                              # alle
 
 ### Release-Build
 
+1. Fixes committen,
+2. Version bumpen (eigener „v#.#.#"-Commit),
+3. git tag v#.#.#,
+4. dann publizieren.bat:
+
 ```bash
 .\publizieren.bat
 ```
