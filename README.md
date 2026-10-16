@@ -149,17 +149,35 @@ dotnet test                              # alle
 
 ### Release-Build
 
-1. Fixes committen,
-2. Version bumpen (eigener „v#.#.#"-Commit),
-3. git tag v#.#.#,
-4. dann publizieren.bat:
+1. Fixes committen.
+2. `<Version>` in **allen** `*.csproj` synchron auf die neue Version heben —
+   Single Source of Truth. `publizieren.bat` liest die Version aus der
+   CLI-csproj, das MSIX-Manifest wird aus der GUI-csproj gesetzt. Eigener
+   „v#.#.#"-Commit.
+3. Taggen, dann Commit **und** Tag nach origin pushen:
+
+```bash
+git tag -a v#.#.# -m "GoBDify v#.#.#"
+```
+
+```bash
+git push origin main v#.#.#
+```
+
+4. Release-Artefakte bauen (nur Windows, code-signing- und FTP-bewusst):
 
 ```bash
 .\publizieren.bat
 ```
 
-baut MSIX (Windows x64+arm64) und CLI (6 Targets) und legt alle Pakete unter
-`dist\` ab — fertig für den Upload zu einem GitHub-Release.
+Das Skript baut die signierte MSIX (Windows x64+arm64) und die CLI (6 Targets)
+und legt zwei Ordner an:
+
+- `dist\` — MSIX + CLI-ZIPs, zum Anhängen an das GitHub-Release.
+- `ftp-upload\` — MSIX + `.appinstaller` (neue und Legacy-URL) für den
+  Auto-Update-Kanal. `publizieren.bat` startet FileZilla mit diesem Ordner;
+  dessen Inhalt nach `easyct.de` hochladen, damit installierte Clients sich
+  automatisch aktualisieren.
 
 ## Mitwirken
 
