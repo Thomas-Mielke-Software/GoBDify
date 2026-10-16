@@ -282,6 +282,29 @@ public class ChainProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task Audit_Namensvergleich_ist_konsistent_bei_reiner_Gross_Kleinschreibung()
+    {
+        // In der .sha256 steht "data.txt", auf der Platte liegt "DATA.txt" mit gleichem Inhalt
+        // (so sieht der Ordner nach einer reinen Groß-/Kleinschreibungs-Umbenennung aus).
+        WriteFile("DATA.txt", "inhalt");
+        WriteShaFile(1, new[] { ("data.txt", Sha256Hex("inhalt")) });
+
+        var report = await new ChainProcessor().AuditAsync(_dir);
+
+        bool datenNeu = report.NewFiles.Contains("DATA.txt");
+        var status = report.Chain[0].Files.Single(f => f.FileName == "data.txt").Status;
+
+        // Kern des Fixes: niemals der widersprüchliche Zustand "nicht neu UND fehlt".
+        Assert.False(!datenNeu && status == FileVerificationStatus.Missing);
+        // Vielmehr genau eine konsistente Deutung, je nach Dateisystem:
+        //  - case-sensitiv (Linux):   DATA.txt ist neu  UND  data.txt fehlt (andere Datei)
+        //  - case-insensitiv (Win/mac): DATA.txt nicht neu  UND  data.txt ist Ok (dieselbe Datei)
+        Assert.True(
+            (datenNeu && status == FileVerificationStatus.Missing) ||
+            (!datenNeu && status == FileVerificationStatus.Ok));
+    }
+
+    [Fact]
     public void IsChainArtifact_erkennt_alle_Varianten()
     {
         Assert.True(ChainProcessor.IsChainArtifact("timestamp00001.sha256"));

@@ -13,6 +13,14 @@ public class ChainProcessor
     private static readonly Regex TstMultiRe = new(@"^timestamp(\d{5})_([a-z])\.sha256\.tst$", RegexOptions.Compiled);
     private static readonly Regex TstLegacyRe = new(@"^timestamp(\d{5})\.sha256\.tst$", RegexOptions.Compiled);
 
+    // Dateinamen-Vergleich muss der Groß-/Kleinschreibung des Dateisystems folgen, damit das
+    // Audit zum selben Ergebnis wie 'sha256sum -c' auf derselben Maschine kommt: Linux ist
+    // case-sensitiv, Windows/macOS behandeln "a.txt" und "A.txt" als dieselbe Datei. Entscheidend
+    // ist, dass die "neue Datei?"-Prüfung und die Verifikations-Suche denselben Vergleicher nutzen —
+    // sonst gilt eine nur umbenannte Datei gleichzeitig als "nicht neu" und als "fehlend".
+    private static readonly StringComparer FileNameComparer =
+        OperatingSystem.IsLinux() ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+
     public ChainProcessor(TimestampingService? ts = null)
     {
         _ts = ts ?? new TimestampingService();
@@ -44,7 +52,7 @@ public class ChainProcessor
         var skeletons = new List<ChainSkeleton>();
         int last = 0;
         var presentNumbers = new HashSet<int>();
-        var referenced = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var referenced = new HashSet<string>(FileNameComparer);
         for (int idx = 0; idx < sha256Files.Count; idx++)
         {
             var sha = sha256Files[idx];
@@ -112,7 +120,7 @@ public class ChainProcessor
                 cancellationToken.ThrowIfCancellationRequested();
                 events?.Report(new FileHashStarted(sk.ChainIndex, fname));
 
-                var listed = allFiles.FirstOrDefault(f => f.Name == fname);
+                var listed = allFiles.FirstOrDefault(f => FileNameComparer.Equals(f.Name, fname));
                 if (listed == null)
                 {
                     files.Add(new FileEntry(fname, expectedHash, null, FileVerificationStatus.Missing));
