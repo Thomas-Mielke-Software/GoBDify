@@ -7,6 +7,7 @@ namespace GoBDify.Views;
 public partial class SettingsPage : ContentPage
 {
     private readonly WorkspaceService _workspace;
+    private readonly IUpdateChecker _updateChecker;
     private readonly Dictionary<string, CheckBox> _checkboxes = new();
 
     private const string RepoUrl = "https://github.com/Thomas-Mielke-Software/GoBDify";
@@ -16,6 +17,7 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
         _workspace = IPlatformApplication.Current!.Services.GetRequiredService<WorkspaceService>();
+        _updateChecker = IPlatformApplication.Current!.Services.GetRequiredService<IUpdateChecker>();
         BuildTsaList();
         ParanoiaSwitch.IsToggled = _workspace.Settings.ParanoiaMode;
         VersionLabel.Text = AppInfo.Current.VersionString;
@@ -34,30 +36,35 @@ public partial class SettingsPage : ContentPage
 
     private async void OnCheckUpdateClicked(object sender, EventArgs e)
     {
-#if WINDOWS
         CheckUpdateBtn.IsEnabled = false;
         UpdateStatusLabel.Text = "Wird geprüft …";
         UpdateStatusLabel.TextColor = Color.FromArgb("#6B7280");
         try
         {
-            var result = await Windows.ApplicationModel.Package.Current.CheckUpdateAvailabilityAsync();
-            switch (result.Availability)
+            var result = await _updateChecker.CheckAsync();
+            switch (result.Status)
             {
-                case Windows.ApplicationModel.PackageUpdateAvailability.NoUpdates:
+                case UpdateCheckStatus.UpToDate:
                     UpdateStatusLabel.Text = "Aktuell — keine neuere Version vorhanden.";
                     UpdateStatusLabel.TextColor = Color.FromArgb("#059669");
                     break;
-                case Windows.ApplicationModel.PackageUpdateAvailability.Available:
+                case UpdateCheckStatus.Available:
                     UpdateStatusLabel.Text = "Update verfügbar — wird beim nächsten App-Start angewendet.";
                     UpdateStatusLabel.TextColor = Color.FromArgb("#1E3A8A");
                     break;
-                case Windows.ApplicationModel.PackageUpdateAvailability.Required:
+                case UpdateCheckStatus.Required:
                     UpdateStatusLabel.Text = "Pflicht-Update verfügbar — App muss neu gestartet werden.";
                     UpdateStatusLabel.TextColor = Color.FromArgb("#991B1B");
                     break;
-                case Windows.ApplicationModel.PackageUpdateAvailability.Error:
-                    UpdateStatusLabel.Text = "Fehler bei der Update-Prüfung — siehe AppInstaller-Logs.";
+                case UpdateCheckStatus.Error:
+                    UpdateStatusLabel.Text = result.Message is null
+                        ? "Fehler bei der Update-Prüfung — siehe AppInstaller-Logs."
+                        : $"Fehler bei der Update-Prüfung: {result.Message}";
                     UpdateStatusLabel.TextColor = Color.FromArgb("#991B1B");
+                    break;
+                case UpdateCheckStatus.NotSupported:
+                    UpdateStatusLabel.Text = "Auto-Update nur unter Windows verfügbar.";
+                    UpdateStatusLabel.TextColor = Color.FromArgb("#6B7280");
                     break;
                 default:
                     UpdateStatusLabel.Text = "Status konnte nicht ermittelt werden (vermutlich nicht via AppInstaller installiert).";
@@ -74,11 +81,6 @@ public partial class SettingsPage : ContentPage
         {
             CheckUpdateBtn.IsEnabled = true;
         }
-#else
-        UpdateStatusLabel.Text = "Auto-Update nur unter Windows verfügbar.";
-        UpdateStatusLabel.TextColor = Color.FromArgb("#6B7280");
-        await Task.CompletedTask;
-#endif
     }
 
     private void BuildTsaList()

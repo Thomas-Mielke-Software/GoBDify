@@ -31,6 +31,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IFolderPicker, GtkFolderPicker>();
         builder.Services.AddSingleton<IFileSaver, GtkFileSaver>();
         builder.Services.AddSingleton<IFileOpener, GtkFileOpener>();
+        builder.Services.AddSingleton<IUpdateChecker, GtkUpdateChecker>();
         builder.Services.AddSingleton<WorkspaceService>();
 
         var app = builder.Build();
